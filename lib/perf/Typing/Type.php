@@ -22,10 +22,10 @@ class Type
         $validator = self::getValidator();
 
         if (!$validator->isValid($typeDefinition, $value)) {
-            if (null === $name) {
-                $message = 'Provided value does not match expected type.';
-            } else {
+            if (is_string($name)) {
                 $message = "Provided {$name} does not match expected type.";
+            } else {
+                $message = 'Provided value does not match expected type.';
             }
 
             throw new \InvalidArgumentException($message);
