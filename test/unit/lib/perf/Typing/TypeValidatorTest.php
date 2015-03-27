@@ -184,6 +184,26 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
+    public function dataProviderIndexedArrayValidCases()
+    {
+        return array(
+            array('{string:mixed}', array()),
+            array('{string:mixed}', array('foo' => 'bar')),
+        );
+    }
+
+    /**
+     *
+     * @dataProvider dataProviderIndexedArrayValidCases
+     */
+    public function testIndexedArrayTypeWithValidValues($typeSpecification, $value)
+    {
+        $this->executeValidTestCase($typeSpecification, $value);
+    }
+
+    /**
+     *
+     */
     private function executeValidTestCase($typeSpecification, $value)
     {
         $result = $this->typeValidator->isValid($typeSpecification, $value);

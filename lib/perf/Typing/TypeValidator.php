@@ -63,6 +63,10 @@ class TypeValidator
             $valueTypeSpecification = $matches[1];
 
             foreach ($value as $subValue) {
+                if ('mixed' === $typeSpecification) {
+                    continue;
+                }
+
                 if (!$this->isValidPrimaryType($valueTypeSpecification, $subValue)) {
                     return false;
                 }
@@ -98,6 +102,10 @@ class TypeValidator
             foreach ($value as $key => $subValue) {
                 if (!$this->isValidPrimaryType($keyTypeSpecification, $key)) {
                     return false;
+                }
+
+                if ('mixed' === $valueTypeSpecification) {
+                    continue;
                 }
 
                 if (!$this->isValidPrimaryType($valueTypeSpecification, $subValue)) {
