@@ -31,6 +31,7 @@ class TypeValidator
             'array'    => 'is_array',
             'object'   => 'is_object',
             'resource' => 'is_resource',
+            'null'     => 'is_null',
         );
 
         if ('mixed' === $typeDefinition) {

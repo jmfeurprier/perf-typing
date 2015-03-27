@@ -3,11 +3,18 @@
 namespace perf\Typing;
 
 /**
- *
+ * Static class wrapping a type validator for easy access to type validation.
  *
  */
 class Type
 {
+
+    /**
+     *
+     *
+     * @var TypeValidator
+     */
+    private static $validator;
 
     /**
      *
@@ -39,12 +46,21 @@ class Type
      */
     private static function getValidator()
     {
-        static $validator;
-
-        if (!$validator) {
-            $validator = new TypeValidator();
+        if (!self::$validator) {
+            self::$validator = new TypeValidator();
         }
 
-        return $validator;
+        return self::$validator;
+    }
+
+    /**
+     *
+     *
+     * @param TypeValidator $validator
+     * @return void
+     */
+    public static function setValidator(TypeValidator $validator)
+    {
+        self::$validator = $validator;
     }
 }

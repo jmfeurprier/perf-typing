@@ -83,7 +83,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testWithValidValues($typeDefinition, $value)
     {
-        $this->assertTrue($this->typeValidator->isValid($typeDefinition, $value));
+        $this->executeValidTestCase($typeDefinition, $value);
     }
 
     /**
@@ -121,6 +121,26 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testWithInvalidValuesWillThrowException($typeDefinition, $value)
     {
-        $this->assertFalse($this->typeValidator->isValid($typeDefinition, $value));
+        $this->executeInvalidTestCase($typeDefinition, $value);
+    }
+
+    /**
+     *
+     */
+    private function executeValidTestCase($typeDefinition, $value)
+    {
+        $result = $this->typeValidator->isValid($typeDefinition, $value);
+
+        $this->assertTrue($result);
+    }
+
+    /**
+     *
+     */
+    private function executeInvalidTestCase($typeDefinition, $value)
+    {
+        $result = $this->typeValidator->isValid($typeDefinition, $value);
+
+        $this->assertFalse($result);
     }
 }
