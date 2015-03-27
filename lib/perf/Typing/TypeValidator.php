@@ -44,10 +44,6 @@ class TypeValidator
             throw new InvalidTypeSpecificationException('Invalid type specification provided (expected string).');
         }
 
-        if ('mixed' === $typeSpecification) {
-            return true;
-        }
-
         if ($this->isPrimaryType($typeSpecification)) {
             return $this->isValidPrimaryType($typeSpecification, $value);
         }
@@ -63,10 +59,6 @@ class TypeValidator
             $valueTypeSpecification = $matches[1];
 
             foreach ($value as $subValue) {
-                if ('mixed' === $typeSpecification) {
-                    continue;
-                }
-
                 if (!$this->isValidPrimaryType($valueTypeSpecification, $subValue)) {
                     return false;
                 }
@@ -104,10 +96,6 @@ class TypeValidator
                     return false;
                 }
 
-                if ('mixed' === $valueTypeSpecification) {
-                    continue;
-                }
-
                 if (!$this->isValidPrimaryType($valueTypeSpecification, $subValue)) {
                     return false;
                 }
@@ -129,6 +117,10 @@ class TypeValidator
      */
     private function isPrimaryType($typeSpecification)
     {
+        if ('mixed' === $typeSpecification) {
+            return true;
+        }
+
         return array_key_exists($typeSpecification, $this->primaryTypeMap);
     }
 
@@ -141,6 +133,10 @@ class TypeValidator
      */
     private function isValidPrimaryType($typeSpecification, $value)
     {
+        if ('mixed' === $typeSpecification) {
+            return true;
+        }
+
         $function = $this->primaryTypeMap[$typeSpecification];
 
         return $function($value);
