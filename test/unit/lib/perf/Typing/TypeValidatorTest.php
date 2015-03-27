@@ -150,9 +150,35 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataProviderArrayValidCases
      */
-    public function testWithArrays($typeDefinition, $value)
+    public function testArrayTypeWithValidValues($typeDefinition, $value)
     {
         $this->executeValidTestCase($typeDefinition, $value);
+    }
+
+    /**
+     *
+     */
+    public function dataProviderArrayInvalidCases()
+    {
+        return array(
+            array('string[]', 'foo'),
+            array('string[]', array(123)),
+
+            array('int[]', 123),
+            array('int[]', array(1.23)),
+
+            array('float[]', 1.23),
+            array('float[]', array(123)),
+        );
+    }
+
+    /**
+     *
+     * @dataProvider dataProviderArrayInvalidCases
+     */
+    public function testArrayTypeWithInvalidValues($typeDefinition, $value)
+    {
+        $this->executeInvalidTestCase($typeDefinition, $value);
     }
 
     /**
