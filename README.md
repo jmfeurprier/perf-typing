@@ -8,7 +8,8 @@ Validates a variable against a type specification (as the ones in PHPDoc blocks)
 - mixed
 - string
 - string[]
-- {string:mixed}
+- resource
+- {string:float}
 - etc.
 
 ## Usage
@@ -20,16 +21,11 @@ Validates a variable against a type specification (as the ones in PHPDoc blocks)
 
 use perf\Typing\Type;
 
-$validInput = array('foo', 'bar');
-
 // Valid, will not throw an exception.
-Type::mustBe('string[]', $validInput);
-
-
-$invalidInput = array(123);
+Type::mustBe('string', 'foo');
 
 // Invalid, will throw an exception.
-Type::mustBe('string[]', $invalidInput);
+Type::mustBe('string', 123);
 ```
 
 ### Validation with booleans
@@ -39,20 +35,9 @@ Type::mustBe('string[]', $invalidInput);
 
 use perf\Typing\Type;
 
-$validInput = array('foo', 'bar');
+$variable = 'foo';
 
-// Valid, will return true.
-if (Type::is('string[]', $validInput)) {
-	// Valid
-} else {
-	// Invalid
-}
-
-
-$invalidInput = array(123);
-
-// Invalid, will return false.
-if (Type::is('string[]', $invalidInput)) {
+if (Type::is('string', $variable)) {
 	// Valid
 } else {
 	// Invalid
@@ -61,18 +46,18 @@ if (Type::is('string[]', $invalidInput)) {
 
 ### Using the concrete validator
 
-You can also use a concrete instance of a type validator if you need to inject it in your own objects.
+You can also use a concrete instance of a type validator.
 
 ```php
 <?php
 
 use perf\Typing\TypeValidator;
 
-$validInput = array('foo', 'bar');
-
 $validator = new TypeValidator();
 
-if ($validator->isValid('string[]', $validInput)) {
+$variable = 'foo';
+
+if ($validator->isValid('string', $variable)) {
 	// Valid
 } else {
 	// Invalid
