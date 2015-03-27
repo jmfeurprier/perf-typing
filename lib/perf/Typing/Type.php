@@ -47,7 +47,7 @@ class Type
     private static function getValidator()
     {
         if (!self::$validator) {
-            self::$validator = new TypeValidator();
+            self::setValidator(new TypeValidator());
         }
 
         return self::$validator;
