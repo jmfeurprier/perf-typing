@@ -13,26 +13,26 @@ class TypeTest extends \PHPUnit_Framework_TestCase
      */
     public function testWithValidValue()
     {
-        Type::check('string', 'string');
+        Type::mustBe('string', 'string');
     }
 
     /**
      *
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Provided value does not match expected type.
+     * @expectedExceptionMessage Provided value does not match type specification.
      */
     public function testWithInvalidValueWillThrowException()
     {
-        Type::check('integer', 'string');
+        Type::mustBe('integer', 'string');
     }
 
     /**
      *
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Provided foo does not match expected type.
+     * @expectedExceptionMessage Provided foo does not match type specification.
      */
     public function testWithInvalidValueAndNamedValueWillThrowException()
     {
-        Type::check('integer', 'string', 'foo');
+        Type::mustBe('integer', 'string', 'foo');
     }
 }

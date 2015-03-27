@@ -13,9 +13,7 @@ Validates a variable against a type specification (as the ones in PHPDoc blocks)
 
 ## Usage
 
-### Static validation
-
-Static validation can be invoked from anywhere, and will throw an exception when the variable does not satisfy the type specification.
+### Validation with exceptions
 
 ```php
 <?php
@@ -25,16 +23,45 @@ use perf\Typing\Type;
 $validInput = array('foo', 'bar');
 
 // Valid, will not throw an exception.
-Type::check('string[]', $validInput);
+Type::mustBe('string[]', $validInput);
 
 
 $invalidInput = array(123);
 
 // Invalid, will throw an exception.
-Type::check('string[]', $invalidInput);
+Type::mustBe('string[]', $invalidInput);
 ```
 
-### Concrete validation
+### Validation with booleans
+
+```php
+<?php
+
+use perf\Typing\Type;
+
+$validInput = array('foo', 'bar');
+
+// Valid, will return true.
+if (Type::is('string[]', $validInput)) {
+	// Valid
+} else {
+	// Invalid
+}
+
+
+$invalidInput = array(123);
+
+// Invalid, will return false.
+if (Type::is('string[]', $invalidInput)) {
+	// Valid
+} else {
+	// Invalid
+}
+```
+
+### Using the concrete validator
+
+You can also use a concrete instance of a type validator if you need to inject it in your own objects.
 
 ```php
 <?php

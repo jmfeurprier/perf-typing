@@ -81,9 +81,9 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataProviderBaseTypesValidCases
      */
-    public function testBaseTypesWithValidValues($typeDefinition, $value)
+    public function testBaseTypesWithValidValues($typeSpecification, $value)
     {
-        $this->executeValidTestCase($typeDefinition, $value);
+        $this->executeValidTestCase($typeSpecification, $value);
     }
 
     /**
@@ -119,15 +119,15 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataProviderBaseTypesInvalidValues
      */
-    public function testBaseTypesWithInvalidValues($typeDefinition, $value)
+    public function testBaseTypesWithInvalidValues($typeSpecification, $value)
     {
-        $this->executeInvalidTestCase($typeDefinition, $value);
+        $this->executeInvalidTestCase($typeSpecification, $value);
     }
 
     /**
      *
      */
-    public function dataProviderArrayValidCases()
+    public function dataProviderNonIndexedArrayValidCases()
     {
         return array(
             array('string[]', array()),
@@ -148,17 +148,17 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
 
     /**
      *
-     * @dataProvider dataProviderArrayValidCases
+     * @dataProvider dataProviderNonIndexedArrayValidCases
      */
-    public function testArrayTypeWithValidValues($typeDefinition, $value)
+    public function testNonIndexedArrayTypeWithValidValues($typeSpecification, $value)
     {
-        $this->executeValidTestCase($typeDefinition, $value);
+        $this->executeValidTestCase($typeSpecification, $value);
     }
 
     /**
      *
      */
-    public function dataProviderArrayInvalidCases()
+    public function dataProviderNonIndexedArrayInvalidCases()
     {
         return array(
             array('string[]', 'foo'),
@@ -174,30 +174,30 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
 
     /**
      *
-     * @dataProvider dataProviderArrayInvalidCases
+     * @dataProvider dataProviderNonIndexedArrayInvalidCases
      */
-    public function testArrayTypeWithInvalidValues($typeDefinition, $value)
+    public function testNonIndexedArrayTypeWithInvalidValues($typeSpecification, $value)
     {
-        $this->executeInvalidTestCase($typeDefinition, $value);
+        $this->executeInvalidTestCase($typeSpecification, $value);
     }
 
     /**
      *
      */
-    private function executeValidTestCase($typeDefinition, $value)
+    private function executeValidTestCase($typeSpecification, $value)
     {
-        $result = $this->typeValidator->isValid($typeDefinition, $value);
+        $result = $this->typeValidator->isValid($typeSpecification, $value);
 
-        $this->assertTrue($result, "Type definition '{$typeDefinition}' is not satisfied by provided value.");
+        $this->assertTrue($result, "Type specification '{$typeSpecification}' is not satisfied by provided value.");
     }
 
     /**
      *
      */
-    private function executeInvalidTestCase($typeDefinition, $value)
+    private function executeInvalidTestCase($typeSpecification, $value)
     {
-        $result = $this->typeValidator->isValid($typeDefinition, $value);
+        $result = $this->typeValidator->isValid($typeSpecification, $value);
 
-        $this->assertFalse($result, "Type definition '{$typeDefinition}' is not satisfied by provided value.");
+        $this->assertFalse($result, "Type specification '{$typeSpecification}' is not satisfied by provided value.");
     }
 }

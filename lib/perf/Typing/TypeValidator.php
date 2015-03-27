@@ -33,31 +33,74 @@ class TypeValidator
     /**
      *
      *
-     * @param string $typeDefinition
+     * @param string $typeSpecification
      * @param mixed $value
      * @return bool
+     * @throws InvalidTypeSpecificationException
      */
-    public function isValid($typeDefinition, $value)
+    public function isValid($typeSpecification, $value)
     {
-        if ('mixed' === $typeDefinition) {
+        if (!is_string($typeSpecification)) {
+            throw new InvalidTypeSpecificationException('Invalid type specification provided (expected string).');
+        }
+
+        if ('mixed' === $typeSpecification) {
             return true;
         }
 
-        if ($this->isPrimaryType($typeDefinition)) {
-            return $this->isValidPrimaryType($typeDefinition, $value);
+        if ($this->isPrimaryType($typeSpecification)) {
+            return $this->isValidPrimaryType($typeSpecification, $value);
         }
 
+        // Non-indexed array type
         $matches = array();
 
-        if (1 === preg_match('/^(.+)\[\]$/', $typeDefinition, $matches)) {
+        if (1 === preg_match('/^(.+)\[\]$/', $typeSpecification, $matches)) {
             if (!is_array($value)) {
                 return false;
             }
 
-            $valueTypeDefinition = $matches[1];
+            $valueTypeSpecification = $matches[1];
 
             foreach ($value as $subValue) {
-                if (!$this->isValidPrimaryType($valueTypeDefinition, $subValue)) {
+                if (!$this->isValidPrimaryType($valueTypeSpecification, $subValue)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Indexed array type
+        $matches = array();
+
+        if (1 === preg_match('/^\{(.+)\:(.+)\}$/', $typeSpecification, $matches)) {
+            if (!is_array($value)) {
+                return false;
+            }
+
+            $keyTypeSpecification = $matches[1];
+
+            $validArrayKeyTypes = array(
+                'int',
+                'integer',
+                'string',
+            );
+
+            if (!in_array($keyTypeSpecification, $validArrayKeyTypes, true)) {
+                throw new InvalidTypeSpecificationException(
+                    'Invalid array key type specification (expected integer or string).'
+                );
+            }
+
+            $valueTypeSpecification = $matches[2];
+
+            foreach ($value as $key => $subValue) {
+                if (!$this->isValidPrimaryType($keyTypeSpecification, $key)) {
+                    return false;
+                }
+
+                if (!$this->isValidPrimaryType($valueTypeSpecification, $subValue)) {
                     return false;
                 }
             }
@@ -71,26 +114,26 @@ class TypeValidator
     /**
      *
      *
-     * @param string $keyTypeDefinition
-     * @param string $valueTypeDefinition
+     * @param string $keyTypeSpecification
+     * @param string $valueTypeSpecification
      * @param mixed $value
      * @return bool
      */
-    private function isPrimaryType($typeDefinition)
+    private function isPrimaryType($typeSpecification)
     {
-        return array_key_exists($typeDefinition, $this->primaryTypeMap);
+        return array_key_exists($typeSpecification, $this->primaryTypeMap);
     }
 
     /**
      *
      *
-     * @param string $typeDefinition
+     * @param string $typeSpecification
      * @param mixed $value
      * @return bool
      */
-    private function isValidPrimaryType($typeDefinition, $value)
+    private function isValidPrimaryType($typeSpecification, $value)
     {
-        $function = $this->primaryTypeMap[$typeDefinition];
+        $function = $this->primaryTypeMap[$typeSpecification];
 
         return $function($value);
     }
