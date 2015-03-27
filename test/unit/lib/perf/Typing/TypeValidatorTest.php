@@ -19,7 +19,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function dataProviderValidCases()
+    public function dataProviderBaseTypesValidCases()
     {
         $booleanTrue  = true;
         $booleanFalse = false;
@@ -79,9 +79,9 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
 
     /**
      *
-     * @dataProvider dataProviderValidCases
+     * @dataProvider dataProviderBaseTypesValidCases
      */
-    public function testWithValidValues($typeDefinition, $value)
+    public function testBaseTypesWithValidValues($typeDefinition, $value)
     {
         $this->executeValidTestCase($typeDefinition, $value);
     }
@@ -89,7 +89,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function dataProviderInvalidValues()
+    public function dataProviderBaseTypesInvalidValues()
     {
         $int      = 123;
         $float    = 2.34;
@@ -117,11 +117,42 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
 
     /**
      *
-     * @dataProvider dataProviderInvalidValues
+     * @dataProvider dataProviderBaseTypesInvalidValues
      */
-    public function testWithInvalidValuesWillThrowException($typeDefinition, $value)
+    public function testBaseTypesWithInvalidValues($typeDefinition, $value)
     {
         $this->executeInvalidTestCase($typeDefinition, $value);
+    }
+
+    /**
+     *
+     */
+    public function dataProviderArrayValidCases()
+    {
+        return array(
+            array('string[]', array()),
+            array('string[]', array('foo')),
+            array('string[]', array('foo' => 'bar')),
+
+            array('int[]', array()),
+            array('int[]', array(123)),
+            array('int[]', array('foo' => 123)),
+            array('int[]', array('foo' => -123)),
+
+            array('float[]', array()),
+            array('float[]', array(1.23)),
+            array('float[]', array('foo' => 1.23)),
+            array('float[]', array('foo' => -1.23)),
+        );
+    }
+
+    /**
+     *
+     * @dataProvider dataProviderArrayValidCases
+     */
+    public function testWithArrays($typeDefinition, $value)
+    {
+        $this->executeValidTestCase($typeDefinition, $value);
     }
 
     /**
@@ -131,7 +162,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->typeValidator->isValid($typeDefinition, $value);
 
-        $this->assertTrue($result);
+        $this->assertTrue($result, "Type definition '{$typeDefinition}' is not satisfied by provided value.");
     }
 
     /**
@@ -141,6 +172,6 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->typeValidator->isValid($typeDefinition, $value);
 
-        $this->assertFalse($result);
+        $this->assertFalse($result, "Type definition '{$typeDefinition}' is not satisfied by provided value.");
     }
 }
