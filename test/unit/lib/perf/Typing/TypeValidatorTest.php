@@ -19,6 +19,33 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
+    public function dataProviderInvalidTypeSpecifications()
+    {
+        return array(
+            array(null),
+            array(123),
+            array(array('int')),
+            array('{array:mixed}'),
+            array('{resource:mixed}'),
+            array('{float:mixed}'),
+            array('{double:mixed}'),
+            array('{foo:mixed}'),
+        );
+    }
+
+    /**
+     *
+     * @dataProvider dataProviderInvalidTypeSpecifications
+     * @expectedException \perf\Typing\InvalidTypeSpecificationException
+     */
+    public function testWithInvalidTypeSpecificationWillThrowException($typeSpecification)
+    {
+        $this->typeValidator->isValid($typeSpecification, null);
+    }
+
+    /**
+     *
+     */
     public function dataProviderBaseTypesValidCases()
     {
         $booleanTrue  = true;
@@ -204,6 +231,42 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
+    public function dataProviderIndexedArrayInvalidCases()
+    {
+        return array(
+            array('{mixed:mixed}', 'foo'),
+
+            array('{int:mixed}', array('foo' => 'bar')),
+            array('{int:string}', array('foo' => 'bar')),
+            array('{int:int}', array('foo' => 123)),
+
+            array('{string:mixed}', array(123 => 'foo')),
+            array('{string:string}', array(123 => 'foo')),
+            array('{string:int}', array(123 => 234)),
+
+            array('{mixed:int}', array('foo')),
+            array('{mixed:int}', array('foo' => 'bar')),
+            array('{mixed:int}', array(123 => 'bar')),
+
+            array('{mixed:string}', array(123)),
+            array('{mixed:string}', array('foo' => 123)),
+            array('{mixed:string}', array(123 => 456)),
+
+        );
+    }
+
+    /**
+     *
+     * @dataProvider dataProviderIndexedArrayInvalidCases
+     */
+    public function testIndexedArrayTypeWithInvalidValues($typeSpecification, $value)
+    {
+        $this->executeInvalidTestCase($typeSpecification, $value);
+    }
+
+    /**
+     *
+     */
     private function executeValidTestCase($typeSpecification, $value)
     {
         $result = $this->typeValidator->isValid($typeSpecification, $value);
@@ -218,6 +281,6 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->typeValidator->isValid($typeSpecification, $value);
 
-        $this->assertFalse($result, "Type specification '{$typeSpecification}' is not satisfied by provided value.");
+        $this->assertFalse($result, "Type specification '{$typeSpecification}' should not be satisfied by provided value.");
     }
 }

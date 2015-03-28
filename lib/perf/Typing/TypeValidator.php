@@ -71,13 +71,10 @@ class TypeValidator
         $matches = array();
 
         if (1 === preg_match('/^\{(.+)\:(.+)\}$/', $typeSpecification, $matches)) {
-            if (!is_array($value)) {
-                return false;
-            }
-
             $keyTypeSpecification = $matches[1];
 
             $validArrayKeyTypes = array(
+                'mixed',
                 'int',
                 'integer',
                 'string',
@@ -87,6 +84,10 @@ class TypeValidator
                 throw new InvalidTypeSpecificationException(
                     'Invalid array key type specification (expected integer or string).'
                 );
+            }
+
+            if (!is_array($value)) {
+                return false;
             }
 
             $valueTypeSpecification = $matches[2];
