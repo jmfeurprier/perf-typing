@@ -19,7 +19,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function dataProviderInvalidTypeSpecifications()
+    public static function dataProviderInvalidTypeSpecifications()
     {
         return array(
             array(null),
@@ -46,7 +46,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function dataProviderBaseTypesValidCases()
+    public static function dataProviderBaseTypesValidCases()
     {
         $booleanTrue  = true;
         $booleanFalse = false;
@@ -116,7 +116,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function dataProviderBaseTypesInvalidValues()
+    public static function dataProviderBaseTypesInvalidValues()
     {
         $int      = 123;
         $float    = 2.34;
@@ -154,7 +154,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function dataProviderNonIndexedArrayValidCases()
+    public static function dataProviderNonIndexedArrayValidCases()
     {
         return array(
             array('string[]', array()),
@@ -185,7 +185,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function dataProviderNonIndexedArrayInvalidCases()
+    public static function dataProviderNonIndexedArrayInvalidCases()
     {
         return array(
             array('string[]', 'foo'),
@@ -211,7 +211,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function dataProviderIndexedArrayValidCases()
+    public static function dataProviderIndexedArrayValidCases()
     {
         return array(
             array('{string:mixed}', array()),
@@ -231,7 +231,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function dataProviderIndexedArrayInvalidCases()
+    public static function dataProviderIndexedArrayInvalidCases()
     {
         return array(
             array('{mixed:mixed}', 'foo'),
@@ -262,6 +262,39 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     public function testIndexedArrayTypeWithInvalidValues($typeSpecification, $value)
     {
         $this->executeInvalidTestCase($typeSpecification, $value);
+    }
+
+    /**
+     *
+     */
+    public static function dataProviderValidAlternativeTypeSpecifications()
+    {
+        return array(
+            array('mixed|mixed', 123),
+            array('mixed|mixed', 'foo'),
+            array('mixed|mixed', array()),
+
+            array('mixed|int', 123),
+            array('mixed|string', 'foo'),
+            array('mixed|array', array()),
+
+            array('string|int', 'foo'),
+            array('string|int', 123),
+            array('string|array', 'foo'),
+            array('string|array', array()),
+
+            array('int|string', 123),
+            array('int|string', 'foo'),
+        );
+    }
+
+    /**
+     *
+     * @dataProvider dataProviderValidAlternativeTypeSpecifications
+     */
+    public function testWithValidAlternativeTypeSpecifications($typeSpecification, $value)
+    {
+        $this->typeValidator->isValid($typeSpecification, $value);
     }
 
     /**

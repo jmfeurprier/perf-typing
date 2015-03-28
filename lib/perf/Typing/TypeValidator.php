@@ -33,6 +33,13 @@ class TypeValidator
     /**
      *
      *
+     * var TypeSpecificationParser
+     */
+    private $typeSpecificationParser;
+
+    /**
+     *
+     *
      * @param string $typeSpecification
      * @param mixed $value
      * @return bool
@@ -44,6 +51,27 @@ class TypeValidator
             throw new InvalidTypeSpecificationException('Invalid type specification provided (expected string).');
         }
 
+        if (1 !== preg_match('/^[a-zA-Z\d\\{\\}\\[\\]\\_\\:\|\\\\]+$/', $typeSpecification)) {
+            throw new InvalidTypeSpecificationException('Invalid type specification provided (invalid characters).');
+        }
+
+        foreach ($this->getTypeSpecificationParser()->parse($typeSpecification) as $alternativeType) {
+            if ($this->processAlternative($alternativeType, $value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     *
+     * @param string $typeSpecification
+     * @param mixed $value
+     * @return bool
+     */
+    private function processAlternative($typeSpecification, $value) {
         if ($this->isPrimaryType($typeSpecification)) {
             return $this->isValidPrimaryType($typeSpecification, $value);
         }
@@ -141,5 +169,19 @@ class TypeValidator
         $function = $this->primaryTypeMap[$typeSpecification];
 
         return $function($value);
+    }
+
+    /**
+     *
+     *
+     * @return TypeSpecificationParser
+     */
+    private function getTypeSpecificationParser()
+    {
+        if (!$this->typeSpecificationParser) {
+            $this->typeSpecificationParser = new TypeSpecificationParser();
+        }
+
+        return $this->typeSpecificationParser;
     }
 }
