@@ -14,7 +14,7 @@ Validates a variable against a type specification (as the ones in PHPDoc blocks)
 
 ## Usage
 
-### Validation with exceptions
+### Static validation with exceptions
 
 ```php
 <?php
@@ -28,7 +28,7 @@ Type::mustBe('string', 'foo');
 Type::mustBe('string', 123);
 ```
 
-### Validation with booleans
+### Static validation with booleans
 
 ```php
 <?php
@@ -44,7 +44,7 @@ if (Type::is('string', $variable)) {
 }
 ```
 
-### Using the concrete validator
+### Concrete validation
 
 You can also use a concrete instance of a type validator.
 
