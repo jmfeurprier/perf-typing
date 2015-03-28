@@ -22,6 +22,20 @@ class TypeSpecificationParser
             throw new InvalidTypeSpecificationException('Invalid type specification provided (expected string).');
         }
 
+        $splitPoints = $this->getSplitPoints($typeSpecification);
+
+        return $this->split($typeSpecification, $splitPoints);
+    }
+
+    /**
+     *
+     *
+     * @param string $typeSpecification
+     * @return int[]
+     * @throws InvalidTypeSpecificationException
+     */
+    private function getSplitPoints($typeSpecification)
+    {
         $length = strlen($typeSpecification);
 
         $depth       = 0;
@@ -55,6 +69,19 @@ class TypeSpecificationParser
 
         $splitPoints[] = $length;
 
+        return $splitPoints;
+    }
+
+    /**
+     *
+     *
+     * @param string $typeSpecification
+     * @param int[] $splitPoints
+     * @return string[]
+     * @throws InvalidTypeSpecificationException
+     */
+    private function split($typeSpecification, array $splitPoints)
+    {
         $offsetStart = 0;
         $chunks      = array();
 

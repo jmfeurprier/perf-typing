@@ -71,7 +71,8 @@ class TypeValidator
      * @param mixed $value
      * @return bool
      */
-    private function processAlternative($typeSpecification, $value) {
+    private function processAlternative($typeSpecification, $value)
+    {
         if ($this->isPrimaryType($typeSpecification)) {
             return $this->isValidPrimaryType($typeSpecification, $value);
         }
@@ -80,57 +81,19 @@ class TypeValidator
         $matches = array();
 
         if (1 === preg_match('/^(.+)\[\]$/', $typeSpecification, $matches)) {
-            if (!is_array($value)) {
-                return false;
-            }
-
             $valueTypeSpecification = $matches[1];
 
-            foreach ($value as $subValue) {
-                if (!$this->isValidPrimaryType($valueTypeSpecification, $subValue)) {
-                    return false;
-                }
-            }
-
-            return true;
+            return $this->isValidNonIndexedArray($valueTypeSpecification, $value);
         }
 
         // Indexed array type
         $matches = array();
 
         if (1 === preg_match('/^\{(.+)\:(.+)\}$/', $typeSpecification, $matches)) {
-            $keyTypeSpecification = $matches[1];
-
-            $validArrayKeyTypes = array(
-                'mixed',
-                'int',
-                'integer',
-                'string',
-            );
-
-            if (!in_array($keyTypeSpecification, $validArrayKeyTypes, true)) {
-                throw new InvalidTypeSpecificationException(
-                    'Invalid array key type specification (expected integer or string).'
-                );
-            }
-
-            if (!is_array($value)) {
-                return false;
-            }
-
+            $keyTypeSpecification   = $matches[1];
             $valueTypeSpecification = $matches[2];
 
-            foreach ($value as $key => $subValue) {
-                if (!$this->isValidPrimaryType($keyTypeSpecification, $key)) {
-                    return false;
-                }
-
-                if (!$this->isValidPrimaryType($valueTypeSpecification, $subValue)) {
-                    return false;
-                }
-            }
-
-            return true;
+            return $this->isValidIndexedArray($keyTypeSpecification, $valueTypeSpecification, $value);
         }
 
         return false;
@@ -169,6 +132,79 @@ class TypeValidator
         $function = $this->primaryTypeMap[$typeSpecification];
 
         return $function($value);
+    }
+
+    /**
+     *
+     *
+     * @param string $typeSpecification
+     * @param mixed $value
+     * @return bool
+     */
+    private function isValidNonIndexedArray($valueTypeSpecification, $value)
+    {
+        if (!is_array($value)) {
+            return false;
+        }
+
+        foreach ($value as $subValue) {
+            if (!$this->isValidPrimaryType($valueTypeSpecification, $subValue)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     *
+     *
+     * @param string $keyTypeSpecification
+     * @param string $valueTypeSpecification
+     * @param mixed $value
+     * @return bool
+     */
+    private function isValidIndexedArray($keyTypeSpecification, $valueTypeSpecification, $value)
+    {
+        if (!$this->isValidArrayKeyType($keyTypeSpecification)) {
+            throw new InvalidTypeSpecificationException(
+                'Invalid array key type specification (expected integer or string).'
+            );
+        }
+
+        if (!is_array($value)) {
+            return false;
+        }
+
+        foreach ($value as $key => $subValue) {
+            if (!$this->isValidPrimaryType($keyTypeSpecification, $key)) {
+                return false;
+            }
+
+            if (!$this->isValidPrimaryType($valueTypeSpecification, $subValue)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     *
+     *
+     * @param string $typeSpecification
+     * @return bool
+     */
+    private function isValidArrayKeyType($keyTypeSpecification)
+    {
+        static $validArrayKeyTypes = array(
+            'mixed',
+            'int',
+            'integer',
+            'string',
+        );
+
+        return in_array($keyTypeSpecification, $validArrayKeyTypes, true);
     }
 
     /**
