@@ -5,11 +5,17 @@ Typing package from perf, the PHP Extensible and Robust Framework.
 
 Validates a variable against a type specification (as the ones in PHPDoc blocks), like the following:
 - integer
+- scalar
 - mixed
 - string
-- string[]
-- resource
+- float[]
+- int[][]
 - {string:float}
+- {int:\My\Stuff}
+- {int:string}[]
+- resource
+- int|string
+- {string:{int:\My\Stuff|int[]}}[]
 - etc.
 
 ## Usage
