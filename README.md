@@ -18,6 +18,7 @@ Validates a variable against a type specification (as the ones in PHPDoc blocks)
 - int|string
 - {string:{int:\My\Stuff|int[]}}[]
 ```
+etc.
 
 ## Usage
 
