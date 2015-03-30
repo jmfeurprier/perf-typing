@@ -36,7 +36,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      * @dataProvider dataProviderInvalidTypeSpecifications
-     * @expectedException \perf\Typing\InvalidTypeSpecificationException
+     * @expectedException \perf\Typing\Exception\InvalidTypeSpecificationException
      */
     public function testWithInvalidTypeSpecificationWillThrowException($typeSpecification)
     {
@@ -251,7 +251,6 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
             array('{mixed:string}', array(123)),
             array('{mixed:string}', array('foo' => 123)),
             array('{mixed:string}', array(123 => 456)),
-
         );
     }
 
