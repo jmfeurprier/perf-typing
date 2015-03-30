@@ -4,6 +4,7 @@ perf typing
 Typing package from perf, the PHP Extensible and Robust Framework.
 
 Validates a variable against a type specification (as the ones in PHPDoc blocks), like the following:
+```
 - integer
 - scalar
 - mixed
@@ -16,7 +17,7 @@ Validates a variable against a type specification (as the ones in PHPDoc blocks)
 - resource
 - int|string
 - {string:{int:\My\Stuff|int[]}}[]
-- etc.
+```
 
 ## Usage
 
