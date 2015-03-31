@@ -27,7 +27,7 @@ class Tokenizer
             );
         }
 
-        $rawTokens = $this->splitTypeSpecification($typeSpecification);
+        $rawTokens = $this->getRawTokens($typeSpecification);
 
         $this->validateRawTokens($typeSpecification, $rawTokens);
 
@@ -41,7 +41,7 @@ class Tokenizer
      * @return string[]
      * @throws InvalidTypeSpecificationException
      */
-    private function splitTypeSpecification($typeSpecification)
+    private function getRawTokens($typeSpecification)
     {
         // @todo Improve regex for classes/internal types.
         $regex   = '#([a-zA-Z0-9_\\\\]+|{|}|:|\\[\\]|\\|)#';
@@ -50,9 +50,7 @@ class Tokenizer
 
         preg_match_all($regex, $typeSpecification, $matches, $flags);
 
-        $rawTokens = $matches[1];
-
-        return $rawTokens;
+        return $matches[1];
     }
 
     /**
@@ -93,7 +91,28 @@ class Tokenizer
      */
     private function buildTokens(array $rawTokens)
     {
-        static $map = array(
+        $tokens = array();
+
+        foreach ($rawTokens as $rawToken) {
+            $tokenString = $rawToken[0];
+            $tokenOffset = $rawToken[1];
+            $tokenType   = $this->getTokenType($tokenString);
+
+            $tokens[] = new Token($tokenType, $tokenString, $tokenOffset);
+        }
+        
+        return $tokens;
+    }
+
+    /**
+     *
+     *
+     * @param string $tokenString
+     * @return string
+     */
+    private function getTokenType($tokenString)
+    {
+        static $typeMap = array(
             '{'  => Token::T_OPENING_BRACKET,
             ':'  => Token::T_COLON,
             '}'  => Token::T_CLOSING_BRACKET,
@@ -101,23 +120,10 @@ class Tokenizer
             '|'  => Token::T_PIPE,
         );
 
-        $tokens = array();
-
-        foreach ($rawTokens as $rawToken) {
-            $tokenString = $rawToken[0];
-            $tokenOffset = $rawToken[1];
-
-            if (array_key_exists($tokenString, $map)) {
-                $type = $map[$tokenString];
-            } else {
-                $type = Token::T_LABEL;
-            }
-
-            $token = new Token($type, $tokenString, $tokenOffset);
-
-            $tokens[] = $token;
+        if (array_key_exists($tokenString, $typeMap)) {
+            return $typeMap[$tokenString];
         }
         
-        return $tokens;
+        return Token::T_LABEL;
     }
 }
