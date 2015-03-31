@@ -90,9 +90,9 @@ class PotatoPeeler
      */
     public function peel(array $potatoes)
     {
-    	Type::mustBe('\My\Potato[]', $potatoes);
+        Type::mustBe('\My\Potato[]', $potatoes);
 
-	// ...
+        // ...
     }
 }
 
