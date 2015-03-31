@@ -2,16 +2,14 @@
 
 namespace perf\Typing\Parsing;
 
-use perf\Typing\Exception\InvalidTypeSpecificationException;
-use perf\Typing\Tokenization\Token;
-use perf\Typing\Tokenization\Tokenizer;
+use perf\Typing\InvalidTypeSpecificationException;
 use perf\Typing\Tree;
 
 /**
  *
  *
  */
-class TypeSpecificationParser
+class Parser
 {
 
     /**
@@ -53,7 +51,9 @@ class TypeSpecificationParser
             } elseif ($token->isOpeningBracket()) {
                 $nodes[] = $this->parseIndexedArray();
             } else {
-                throw new InvalidTypeSpecificationException("Unexpected token '{$token->getContent()}'");
+                throw new InvalidTypeSpecificationException(
+                    "Unexpected token '{$token->getContent()}' at offset {$token->getOffset()}."
+                );
             }
 
             if (!$this->hasNextToken()) {
@@ -63,14 +63,18 @@ class TypeSpecificationParser
             $nextToken = $this->getNextToken();
 
             if (!$nextToken->isPipe()) {
-                throw new InvalidTypeSpecificationException("Unexpected token '{$nextToken->getContent()}'");
+                throw new InvalidTypeSpecificationException(
+                    "Unexpected token '{$nextToken->getContent()}' at offset {$nextToken->getOffset()}."
+                );
             }
 
             $this->popNextToken();
 
             // Trailing pipe (|) encountered?
             if (!$this->hasNextToken()) {
-                throw new InvalidTypeSpecificationException("Unexpected type specification end.");
+                throw new InvalidTypeSpecificationException(
+                    "Premature end of type specification encountered."
+                );
             }
         }
 
@@ -113,13 +117,17 @@ class TypeSpecificationParser
         $token = $this->popNextToken();
 
         if (!$token->isLabel()) {
-            throw new InvalidTypeSpecificationException();
+            throw new InvalidTypeSpecificationException(
+                "Unexpected token '{$token->getContent()}' at offset {$token->getOffset()}."
+            );
         }
 
         $type = $token->getContent();
 
         if (!in_array($type, $validArrayKeyTypes, true)) {
-            throw new InvalidTypeSpecificationException("Unexpected type '{$type}' for array key.");
+            throw new InvalidTypeSpecificationException(
+                "Unexpected type '{$type}' for array key at offset {$token->getOffset()}."
+            );
         }
 
         return new Tree\LeafTypeNode($type);
@@ -134,14 +142,16 @@ class TypeSpecificationParser
     private function parseColon()
     {
         if (!$this->hasNextToken()) {
-            throw new InvalidTypeSpecificationException("Unexpected type specification end.");
+            throw new InvalidTypeSpecificationException(
+                "Premature end of type specification encountered."
+            );
         }
 
         $token = $this->popNextToken();
 
         if (!$token->isColon()) {
             throw new InvalidTypeSpecificationException(
-                "Unexpected token encountered '{$token->getContent()}' (expected :)."
+                "Unexpected token '{$token->getContent()}' at offset {$token->getOffset()} (expected colon)."
             );
         }
     }
@@ -164,11 +174,15 @@ class TypeSpecificationParser
             } elseif ($token->isOpeningBracket()) {
                 $nodes[] = $this->parseIndexedArray();
             } else {
-                throw new InvalidTypeSpecificationException("Unexpected token '{$token->getContent()}'");
+                throw new InvalidTypeSpecificationException(
+                    "Unexpected token '{$token->getContent()}' at offset {$token->getOffset()} (expected colon)."
+                );
             }
 
             if (!$this->hasNextToken()) {
-                throw new InvalidTypeSpecificationException("Unexpected type specification end.");
+                throw new InvalidTypeSpecificationException(
+                    "Premature end of type specification encountered."
+                );
             }
 
             $nextToken = $this->getNextToken();
@@ -183,7 +197,9 @@ class TypeSpecificationParser
                 break;
             }
 
-            throw new InvalidTypeSpecificationException("Unexpected token '{$nextToken->getContent()}'");
+            throw new InvalidTypeSpecificationException(
+                "Unexpected token '{$nextToken->getContent()}' at offset {$nextToken->getOffset()}."
+            );
         }
 
         return $this->mergeTypeNodes($nodes);
@@ -244,7 +260,9 @@ class TypeSpecificationParser
             return $node;
         }
 
-        throw new InvalidTypeSpecificationException();
+        throw new InvalidTypeSpecificationException(
+            "Failed to extract tokens from specification type."
+        );
     }
 
     /**

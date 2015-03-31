@@ -1,8 +1,8 @@
 <?php
 
-namespace perf\Typing\Tokenization;
+namespace perf\Typing\Parsing;
 
-use perf\Typing\Exception\InvalidTypeSpecificationException;
+use perf\Typing\InvalidTypeSpecificationException;
 
 /**
  *

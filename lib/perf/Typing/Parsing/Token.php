@@ -1,6 +1,6 @@
 <?php
 
-namespace perf\Typing\Tokenization;
+namespace perf\Typing\Parsing;
 
 /**
  *

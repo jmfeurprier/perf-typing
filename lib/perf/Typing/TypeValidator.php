@@ -2,8 +2,7 @@
 
 namespace perf\Typing;
 
-use perf\Typing\Parsing\TypeSpecificationParser;
-use perf\Typing\Exception\InvalidTypeSpecificationException;
+use perf\Typing\Parsing\Parser;
 
 /**
  *
@@ -15,9 +14,9 @@ class TypeValidator
     /**
      *
      *
-     * @var TypeSpecificationParser
+     * @var Parser
      */
-    private $typeSpecificationParser;
+    private $parser;
 
     /**
      *
@@ -30,10 +29,12 @@ class TypeValidator
     public function isValid($typeSpecification, $value)
     {
         if (!is_string($typeSpecification)) {
-            throw new InvalidTypeSpecificationException('Invalid type specification provided (expected string).');
+            throw new InvalidTypeSpecificationException(
+                "Invalid type specification provided (expected string)."
+            );
         }
 
-        $typeTree = $this->getTypeSpecificationParser()->parse($typeSpecification);
+        $typeTree = $this->getParser()->parse($typeSpecification);
 
         return $typeTree->isValid($value);
     }
@@ -41,14 +42,14 @@ class TypeValidator
     /**
      *
      *
-     * @return TypeSpecificationParser
+     * @return Parser
      */
-    private function getTypeSpecificationParser()
+    private function getParser()
     {
-        if (!$this->typeSpecificationParser) {
-            $this->typeSpecificationParser = new TypeSpecificationParser();
+        if (!$this->parser) {
+            $this->parser = new Parser();
         }
 
-        return $this->typeSpecificationParser;
+        return $this->parser;
     }
 }

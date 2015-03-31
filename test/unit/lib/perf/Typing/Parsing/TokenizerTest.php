@@ -1,6 +1,6 @@
 <?php
 
-namespace perf\Typing\Tokenization;
+namespace perf\Typing\Parsing;
 
 /**
  *
@@ -60,7 +60,7 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInternalType('array', $result);
         $this->assertCount(count($expected), $result);
-        $this->assertContainsOnly('\\perf\\Typing\\Tokenization\\Token', $result);
+        $this->assertContainsOnly('\\perf\\Typing\\Parsing\\Token', $result);
 
         $index = 0;
         foreach ($expected as $expectedOffset => $expectedContent) {
@@ -94,7 +94,7 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
     /**
      *
      * @dataProvider dataProviderInvalidTypeSpecification
-     * @expectedException \perf\Typing\Exception\InvalidTypeSpecificationException
+     * @expectedException \perf\Typing\InvalidTypeSpecificationException
      */
     public function testTokenizeWithInvalidTypeSpecificationWillThrowException($typeSpecification)
     {

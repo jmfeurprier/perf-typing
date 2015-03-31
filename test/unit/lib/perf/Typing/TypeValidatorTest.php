@@ -36,7 +36,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      * @dataProvider dataProviderInvalidTypeSpecifications
-     * @expectedException \perf\Typing\Exception\InvalidTypeSpecificationException
+     * @expectedException \perf\Typing\InvalidTypeSpecificationException
      */
     public function testWithInvalidTypeSpecificationWillThrowException($typeSpecification)
     {

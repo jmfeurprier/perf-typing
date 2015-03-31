@@ -5,7 +5,7 @@ namespace perf\Typing\Parsing;
 /**
  *
  */
-class TypeSpecificationParserTest extends \PHPUnit_Framework_TestCase
+class ParserTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -13,7 +13,7 @@ class TypeSpecificationParserTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->typeSpecificationParser = new TypeSpecificationParser();
+        $this->parser = new Parser();
     }
 
     /**
@@ -42,7 +42,7 @@ class TypeSpecificationParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseWithValidTypeSpecification($typeSpecification)
     {
-        $result = $this->typeSpecificationParser->parse($typeSpecification);
+        $result = $this->parser->parse($typeSpecification);
 
         $this->assertInstanceOf('\\perf\\Typing\\Tree\\TypeNode', $result);
         $this->assertSame($typeSpecification, (string) $result);
@@ -82,10 +82,10 @@ class TypeSpecificationParserTest extends \PHPUnit_Framework_TestCase
     /**
      *
      * @dataProvider dataProviderInvalidTypeSpecification
-     * @expectedException \perf\Typing\Exception\InvalidTypeSpecificationException
+     * @expectedException \perf\Typing\InvalidTypeSpecificationException
      */
     public function testParseWithInvalidTypeSpecification($typeSpecification)
     {
-        $this->typeSpecificationParser->parse($typeSpecification);
+        $this->parser->parse($typeSpecification);
     }
 }

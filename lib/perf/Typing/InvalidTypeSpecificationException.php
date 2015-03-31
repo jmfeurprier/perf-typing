@@ -1,6 +1,6 @@
 <?php
 
-namespace perf\Typing\Exception;
+namespace perf\Typing;
 
 /**
  *
