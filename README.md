@@ -95,10 +95,4 @@ class PotatoPeeler
         // ...
     }
 }
-
-// Valid, will not throw an exception.
-Type::mustBe('string', 'foo');
-
-// Invalid, will throw an exception.
-Type::mustBe('string', 123);
 ```
