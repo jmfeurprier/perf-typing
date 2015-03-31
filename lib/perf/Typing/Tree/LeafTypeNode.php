@@ -17,7 +17,7 @@ class LeafTypeNode implements TypeNode
     private $type;
 
     /**
-     *
+     * Constructor.
      *
      * @param string $type
      * @return void
@@ -28,9 +28,9 @@ class LeafTypeNode implements TypeNode
     }
 
     /**
+     * Tells wether provided value is valid according to current type node.
      *
-     *
-     * @param mixed $value
+     * @param mixed $value Value to validate.
      * @return bool
      */
     public function isValid($value)
@@ -69,7 +69,7 @@ class LeafTypeNode implements TypeNode
     }
 
     /**
-     *
+     * Returns a textual representation of the current type node.
      *
      * @return string
      */

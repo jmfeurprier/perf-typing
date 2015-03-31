@@ -17,6 +17,17 @@ class Type
     private static $validator;
 
     /**
+     * Sets a type validator.
+     *
+     * @param TypeValidator $validator
+     * @return void
+     */
+    public static function setValidator(TypeValidator $validator)
+    {
+        self::$validator = $validator;
+    }
+
+    /**
      *
      *
      * @param string $typeSpecification
@@ -63,16 +74,5 @@ class Type
         }
 
         return self::$validator;
-    }
-
-    /**
-     * Sets a type validator.
-     *
-     * @param TypeValidator $validator
-     * @return void
-     */
-    public static function setValidator(TypeValidator $validator)
-    {
-        self::$validator = $validator;
     }
 }

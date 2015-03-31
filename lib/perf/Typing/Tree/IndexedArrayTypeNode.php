@@ -10,24 +10,24 @@ class IndexedArrayTypeNode implements TypeNode
 {
 
     /**
-     *
+     * Type node for the key part of an indexed array.
      *
      * @var TypeNode
      */
     private $keyTypeNode;
 
     /**
-     *
+     * Type node for the value part of an indexed array.
      *
      * @var TypeNode
      */
     private $valueTypeNode;
 
     /**
+     * Constructor.
      *
-     *
-     * @param TypeNode $keyTypeNode
-     * @param TypeNode $valueTypeNode
+     * @param TypeNode $keyTypeNode Key part type node.
+     * @param TypeNode $valueTypeNode Value part type node.
      * @return void
      */
     public function __construct(TypeNode $keyTypeNode, TypeNode $valueTypeNode)
@@ -37,9 +37,9 @@ class IndexedArrayTypeNode implements TypeNode
     }
 
     /**
+     * Tells wether provided value is valid according to current type node.
      *
-     *
-     * @param mixed $value
+     * @param mixed $value Value to validate.
      * @return bool
      */
     public function isValid($value)
@@ -62,7 +62,7 @@ class IndexedArrayTypeNode implements TypeNode
     }
 
     /**
-     *
+     * Returns a textual representation of the current type node.
      *
      * @return string
      */

@@ -17,7 +17,7 @@ class MultipleTypeNode implements TypeNode
     private $typeNodes = array();
 
     /**
-     *
+     * Constructor.
      *
      * @param TypeNode[] $typeNodes
      * @return void
@@ -41,9 +41,9 @@ class MultipleTypeNode implements TypeNode
     }
 
     /**
+     * Tells wether provided value is valid according to current type node.
      *
-     *
-     * @param mixed $value
+     * @param mixed $value Value to validate.
      * @return bool
      */
     public function isValid($value)
@@ -58,7 +58,7 @@ class MultipleTypeNode implements TypeNode
     }
 
     /**
-     *
+     * Returns a textual representation of the current type node.
      *
      * @return string
      */
