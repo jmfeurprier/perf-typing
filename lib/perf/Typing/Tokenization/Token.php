@@ -8,24 +8,47 @@ namespace perf\Typing\Tokenization;
 class Token
 {
 
-    const TYPE_OPENING_BRACKET = 'OPENING_BRACKET';
-    const TYPE_COLON           = 'COLON';
-    const TYPE_CLOSING_BRACKET = 'CLOSING_BRACKET';
-    const TYPE_SQUARE_BRACKETS = 'SQUARE_BRACKETS';
-    const TYPE_PIPE            = 'PIPE';
-    const TYPE_LABEL           = 'LABEL';
+    const T_OPENING_BRACKET = 'OPENING_BRACKET';
+    const T_COLON           = 'COLON';
+    const T_CLOSING_BRACKET = 'CLOSING_BRACKET';
+    const T_SQUARE_BRACKETS = 'SQUARE_BRACKETS';
+    const T_PIPE            = 'PIPE';
+    const T_LABEL           = 'LABEL';
 
     /**
+     * Token type.
      *
+     * @var string
+     */
+    private $type;
+
+    /**
+     * Token content.
+     *
+     * @var string
+     */
+    private $content;
+
+    /**
+     * Position where the token was extracted from the original type specification string.
+     *
+     * @var int
+     */
+    private $offset;
+
+    /**
+     * Constructor.
      *
      * @param string $type
      * @param string $content
+     * @param int $offset
      * @return void
      */
-    public function __construct($type, $content)
+    public function __construct($type, $content, $offset)
     {
         $this->type    = $type;
         $this->content = $content;
+        $this->offset  = $offset;
     }
 
     /**
@@ -35,7 +58,7 @@ class Token
      */
     public function isOpeningBracket()
     {
-        return (self::TYPE_OPENING_BRACKET === $this->type);
+        return (self::T_OPENING_BRACKET === $this->type);
     }
 
     /**
@@ -45,7 +68,7 @@ class Token
      */
     public function isColon()
     {
-        return (self::TYPE_COLON === $this->type);
+        return (self::T_COLON === $this->type);
     }
 
     /**
@@ -55,7 +78,7 @@ class Token
      */
     public function isClosingBracket()
     {
-        return (self::TYPE_CLOSING_BRACKET === $this->type);
+        return (self::T_CLOSING_BRACKET === $this->type);
     }
 
     /**
@@ -65,7 +88,7 @@ class Token
      */
     public function isSquareBrackets()
     {
-        return (self::TYPE_SQUARE_BRACKETS === $this->type);
+        return (self::T_SQUARE_BRACKETS === $this->type);
     }
 
     /**
@@ -75,7 +98,7 @@ class Token
      */
     public function isPipe()
     {
-        return (self::TYPE_PIPE === $this->type);
+        return (self::T_PIPE === $this->type);
     }
 
     /**
@@ -85,7 +108,7 @@ class Token
      */
     public function isLabel()
     {
-        return (self::TYPE_LABEL === $this->type);
+        return (self::T_LABEL === $this->type);
     }
 
     /**
@@ -96,5 +119,15 @@ class Token
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     *
+     *
+     * @return int
+     */
+    public function getOffset()
+    {
+        return $this->offset;
     }
 }

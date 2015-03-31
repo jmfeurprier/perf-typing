@@ -14,57 +14,106 @@ class Tokenizer
      *
      *
      * @param string $typeSpecification
-     * @return string[]
+     * @return Token[]
      * @throws InvalidTypeSpecificationException
      */
     public function tokenize($typeSpecification)
     {
         if (!is_string($typeSpecification)) {
-            throw new InvalidTypeSpecificationException('Invalid type specification provided (expected string).');
+            $type = gettype($typeSpecification);
+
+            throw new InvalidTypeSpecificationException(
+                "Invalid type specification provided: expected string, got {$type}."
+            );
         }
 
+        $rawTokens = $this->splitTypeSpecification($typeSpecification);
+
+        $this->validateRawTokens($typeSpecification, $rawTokens);
+
+        return $this->buildTokens($rawTokens);
+    }
+
+    /**
+     *
+     *
+     * @param string $typeSpecification
+     * @return string[]
+     * @throws InvalidTypeSpecificationException
+     */
+    private function splitTypeSpecification($typeSpecification)
+    {
+        // @todo Improve regex for classes/internal types.
+        $regex   = '#([a-zA-Z0-9_\\\\]+|{|}|:|\\[\\]|\\|)#';
         $matches = array();
+        $flags   = (\PREG_PATTERN_ORDER | \PREG_OFFSET_CAPTURE);
 
-        preg_match_all(
-            '#([a-zA-Z0-9_\\\\]+|{|}|:|\\[\\]|\\|)#',
-            $typeSpecification,
-            $matches
-        );
+        preg_match_all($regex, $typeSpecification, $matches, $flags);
 
-        $tokenStrings = $matches[1];
+        $rawTokens = $matches[1];
 
-        if (count($tokenStrings) < 1) {
-            throw new InvalidTypeSpecificationException('Invalid type specification provided.');
+        return $rawTokens;
+    }
+
+    /**
+     *
+     *
+     * @param string $typeSpecification
+     * @param string[] $rawTokens
+     * @return void
+     * @throws InvalidTypeSpecificationException
+     */
+    private function validateRawTokens($typeSpecification, array $rawTokens)
+    {
+        if (count($rawTokens) < 1) {
+            throw new InvalidTypeSpecificationException(
+                'Invalid type specification provided: no type specification found.'
+            );
         }
 
         $totalLength = 0;
 
-        foreach ($tokenStrings as $tokenString) {
-            $totalLength += strlen($tokenString);
+        foreach ($rawTokens as $rawToken) {
+            $totalLength += strlen($rawToken[0]);
         }
 
         if ($totalLength !== strlen($typeSpecification)) {
-            throw new InvalidTypeSpecificationException();
+            throw new InvalidTypeSpecificationException(
+                'Invalid type specification provided: unexpected characters found.'
+            );
         }
+    }
 
+    /**
+     *
+     *
+     * @param string[] $rawTokens
+     * @return Token[]
+     * @throws InvalidTypeSpecificationException
+     */
+    private function buildTokens(array $rawTokens)
+    {
         static $map = array(
-            '{'  => Token::TYPE_OPENING_BRACKET,
-            ':'  => Token::TYPE_COLON,
-            '}'  => Token::TYPE_CLOSING_BRACKET,
-            '[]' => Token::TYPE_SQUARE_BRACKETS,
-            '|'  => Token::TYPE_PIPE,
+            '{'  => Token::T_OPENING_BRACKET,
+            ':'  => Token::T_COLON,
+            '}'  => Token::T_CLOSING_BRACKET,
+            '[]' => Token::T_SQUARE_BRACKETS,
+            '|'  => Token::T_PIPE,
         );
 
         $tokens = array();
 
-        foreach ($tokenStrings as $tokenString) {
+        foreach ($rawTokens as $rawToken) {
+            $tokenString = $rawToken[0];
+            $tokenOffset = $rawToken[1];
+
             if (array_key_exists($tokenString, $map)) {
                 $type = $map[$tokenString];
             } else {
-                $type = Token::TYPE_LABEL;
+                $type = Token::T_LABEL;
             }
 
-            $token = new Token($type, $tokenString);
+            $token = new Token($type, $tokenString, $tokenOffset);
 
             $tokens[] = $token;
         }

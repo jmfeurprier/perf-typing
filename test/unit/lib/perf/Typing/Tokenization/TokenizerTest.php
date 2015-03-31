@@ -26,36 +26,36 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
         $result = $this->tokenizer->tokenize($typeSpecification);
 
         $expected = array(
-            "{",
-            "int",
-            ":",
-            "string",
-            "}",
-            "[]",
-            "|",
-            "null",
-            "|",
-            "{",
-            "string",
-            ":",
-            "int",
-            "|",
-            "\\Foo\\Bar",
-            "}",
-            "|",
-            "{",
-            "string",
-            ":",
-            "{",
-            "int",
-            ":",
-            "Foo\\Bar",
-            "|",
-            "string",
-            "}",
-            "|",
-            "Baz",
-            "}",
+            0  => "{",
+            1  => "int",
+            4  => ":",
+            5  => "string",
+            11 => "}",
+            12 => "[]",
+            14 => "|",
+            15 => "null",
+            19 => "|",
+            20 => "{",
+            21 => "string",
+            27 => ":",
+            28 => "int",
+            31 => "|",
+            32 => "\\Foo\\Bar",
+            40 => "}",
+            41 => "|",
+            42 => "{",
+            43 => "string",
+            49 => ":",
+            50 => "{",
+            51 => "int",
+            54 => ":",
+            55 => "Foo\\Bar",
+            62 => "|",
+            63 => "string",
+            69 => "}",
+            70 => "|",
+            71 => "Baz",
+            74 => "}",
         );
 
         $this->assertInternalType('array', $result);
@@ -63,10 +63,11 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
         $this->assertContainsOnly('\\perf\\Typing\\Tokenization\\Token', $result);
 
         $index = 0;
-        foreach ($result as $resultToken) {
-            $expectedTokenContent = $expected[$index];
+        foreach ($expected as $expectedOffset => $expectedContent) {
+            $resultToken = $result[$index];
 
-            $this->assertSame($expectedTokenContent, $resultToken->getContent());
+            $this->assertSame($expectedContent, $resultToken->getContent());
+            $this->assertSame($expectedOffset, $resultToken->getOffset());
 
             ++$index;
         }
