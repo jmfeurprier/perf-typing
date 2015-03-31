@@ -71,3 +71,34 @@ if ($validator->isValid('string', $variable)) {
 	// Invalid
 }
 ```
+
+### Typical use
+
+```php
+<?php
+
+namespace My;
+
+use perf\Typing\Type;
+
+class PotatoPeeler
+{
+
+    /**
+     * @param Potato[] $potatoes
+     * @return void
+     */
+    public function peel(array $potatoes)
+    {
+    	Type::mustBe('\My\Potato[]', $potatoes);
+
+	// ...
+    }
+}
+
+// Valid, will not throw an exception.
+Type::mustBe('string', 'foo');
+
+// Invalid, will throw an exception.
+Type::mustBe('string', 123);
+```
