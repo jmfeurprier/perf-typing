@@ -21,10 +21,21 @@ class TypeValidator
     /**
      *
      *
+     * @param Parser $parser
+     * @return void
+     */
+    public function setParser(Parser $parser)
+    {
+        $this->parser = $parser;
+    }
+
+    /**
+     *
+     *
      * @param string $typeSpecification
      * @param mixed $value
      * @return bool
-     * @throws InvalidTypeSpecificationException
+     * @throws \InvalidArgumentException
      */
     public function isValid($typeSpecification, $value)
     {
@@ -47,7 +58,7 @@ class TypeValidator
     private function getParser()
     {
         if (!$this->parser) {
-            $this->parser = new Parser();
+            $this->setParser(new Parser());
         }
 
         return $this->parser;
