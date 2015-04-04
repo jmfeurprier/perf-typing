@@ -6,7 +6,7 @@ namespace perf\Typing\Tree;
  *
  *
  */
-class IndexedArrayTypeNode implements TypeNode
+class MapTypeNode implements TypeNode
 {
 
     /**

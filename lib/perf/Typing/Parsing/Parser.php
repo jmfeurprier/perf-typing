@@ -95,7 +95,7 @@ class Parser
         $this->parseColon();
         $valueTypeNode = $this->parseArrayValueType();
 
-        $node = new Tree\IndexedArrayTypeNode($keyTypeNode, $valueTypeNode);
+        $node = new Tree\MapTypeNode($keyTypeNode, $valueTypeNode);
 
         return $this->parseSquareBrackets($node);
     }
@@ -235,7 +235,7 @@ class Parser
 
             $this->popNextToken();
 
-            $node = new Tree\NonIndexedArrayTypeNode($node);
+            $node = new Tree\CollectionTypeNode($node);
         }
 
         return $node;

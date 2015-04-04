@@ -18,14 +18,14 @@ class TreeTest extends \PHPUnit_Framework_TestCase
 
         $this->tree = new MultipleTypeNode(
             array(
-                new NonIndexedArrayTypeNode(
-                    new IndexedArrayTypeNode(
+                new CollectionTypeNode(
+                    new MapTypeNode(
                         new LeafTypeNode('int'),
                         new LeafTypeNode('string')
                     )
                 ),
                 new LeafTypeNode('null'),
-                new IndexedArrayTypeNode(
+                new MapTypeNode(
                     new LeafTypeNode('string'),
                     new MultipleTypeNode(
                         array(
@@ -34,11 +34,11 @@ class TreeTest extends \PHPUnit_Framework_TestCase
                         )
                     )
                 ),
-                new IndexedArrayTypeNode(
+                new MapTypeNode(
                     new LeafTypeNode('string'),
                     new MultipleTypeNode(
                         array(
-                            new IndexedArrayTypeNode(
+                            new MapTypeNode(
                                 new LeafTypeNode('int'),
                                 new MultipleTypeNode(
                                     array(

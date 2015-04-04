@@ -6,7 +6,7 @@ namespace perf\Typing\Tree;
  *
  *
  */
-class NonIndexedArrayTypeNode implements TypeNode
+class CollectionTypeNode implements TypeNode
 {
 
     /**
