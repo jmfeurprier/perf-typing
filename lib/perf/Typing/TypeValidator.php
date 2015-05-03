@@ -45,9 +45,21 @@ class TypeValidator
             );
         }
 
-        $typeTree = $this->getParser()->parse($typeSpecification);
+        $typeTree = $this->getTypeTree($typeSpecification);
 
         return $typeTree->isValid($value);
+    }
+
+    /**
+     *
+     *
+     * @param string $typeSpecification
+     * @return TypeTree
+     * @throws \InvalidArgumentException
+     */
+    private function getTypeTree($typeSpecification)
+    {
+        return $this->getParser()->parse($typeSpecification);
     }
 
     /**

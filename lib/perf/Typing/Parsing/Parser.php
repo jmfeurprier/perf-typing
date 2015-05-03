@@ -21,6 +21,14 @@ class Parser
 
     /**
      *
+     * Temporary property.
+     *
+     * @var Token[]
+     */
+    private $tokens = array();
+
+    /**
+     *
      *
      * @param Tokenizer $tokenizer
      * @return void
@@ -34,7 +42,7 @@ class Parser
      *
      *
      * @param string $typeSpecification
-     * @return Tree\TypeNode[]
+     * @return Tree\TypeNode
      * @throws InvalidTypeSpecificationException
      */
     public function parse($typeSpecification)
@@ -244,8 +252,8 @@ class Parser
     /**
      *
      *
-     * @param Tree\Token[] $nodes
-     * @return Tree\Token
+     * @param Tree\TypeNode[] $nodes
+     * @return Tree\TypeNode
      * @throws InvalidTypeSpecificationException
      */
     private function mergeTypeNodes(array $nodes)
@@ -268,7 +276,7 @@ class Parser
     /**
      *
      *
-     * @return Tree\Token
+     * @return Token
      */
     private function getNextToken()
     {
@@ -278,7 +286,7 @@ class Parser
     /**
      *
      *
-     * @return Tree\Token
+     * @return Token
      */
     private function popNextToken()
     {
