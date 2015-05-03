@@ -2,7 +2,7 @@
 	"name"        : "perf/typing",
 	"type"        : "library",
 	"license"     : "MIT",
-	"description" : "Allows to check if a variable is of the expected type, using a type specification string like the ones in PHPDoc blocks (int, \Foo\Bar[], null|string, etc).",
+	"description" : "Allows to check if a variable is of the expected type, using a type specification string like the ones in PHPDoc blocks (int, \\Foo\\Bar[], null|string, etc).",
 	"require"     : {
 		"php" : ">=5.3.3"
 	},
