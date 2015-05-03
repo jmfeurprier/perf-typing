@@ -2,9 +2,9 @@
 
 namespace perf\Typing;
 
-use perf\Typing\Parsing\Parser;
 use perf\Caching\CacheClient;
 use perf\Caching\VolatileStorage;
+use perf\Typing\Parsing\Parser;
 
 /**
  *
