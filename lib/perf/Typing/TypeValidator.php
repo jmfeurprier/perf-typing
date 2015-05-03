@@ -3,6 +3,8 @@
 namespace perf\Typing;
 
 use perf\Typing\Parsing\Parser;
+use perf\Caching\CacheClient;
+use perf\Caching\VolatileStorage;
 
 /**
  *
@@ -21,12 +23,30 @@ class TypeValidator
     /**
      *
      *
+     * @var CacheClient
+     */
+    private $cacheClient;
+
+    /**
+     *
+     *
      * @param Parser $parser
      * @return void
      */
     public function setParser(Parser $parser)
     {
         $this->parser = $parser;
+    }
+
+    /**
+     *
+     *
+     * @param CacheClient $cacheClient
+     * @return void
+     */
+    public function setCacheClient(CacheClient $cacheClient)
+    {
+        $this->cacheClient = $cacheClient;
     }
 
     /**
@@ -59,7 +79,17 @@ class TypeValidator
      */
     private function getTypeTree($typeSpecification)
     {
-        return $this->getParser()->parse($typeSpecification);
+        $cacheEntryId = __CLASS__ . "|typeSpecification:{$typeSpecification}";
+
+        $typeTree = $this->getCacheClient()->tryFetch($cacheEntryId);
+
+        if (!$typeTree) {
+            $typeTree = $this->getParser()->parse($typeSpecification);
+
+            $this->getCacheClient()->store($cacheEntryId, $typeTree);
+        }
+
+        return $typeTree;
     }
 
     /**
@@ -74,5 +104,22 @@ class TypeValidator
         }
 
         return $this->parser;
+    }
+
+    /**
+     *
+     *
+     * @return CacheClient
+     */
+    private function getCacheClient()
+    {
+        if (!$this->cacheClient) {
+            $cacheStorage = new VolatileStorage();
+            $cacheClient  = new CacheClient($cacheStorage);
+
+            $this->setCacheClient($cacheClient);
+        }
+
+        return $this->cacheClient;
     }
 }
