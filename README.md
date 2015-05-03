@@ -1,9 +1,9 @@
-perf typing
-============
+typing
+======
 
-Typing package from perf, the PHP Extensible and Robust Framework.
+This package allows to check if a variable is of the expected type, using a type specification string like the ones in PHPDoc blocks.
 
-Validates a variable against a type specification (as the ones in PHPDoc blocks), like the following:
+Type specifications strings can be like the following:
 ```
 - integer
 - scalar
