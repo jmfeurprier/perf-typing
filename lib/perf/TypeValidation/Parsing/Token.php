@@ -1,6 +1,6 @@
 <?php
 
-namespace perf\Typing\Parsing;
+namespace perf\TypeValidation\Parsing;
 
 /**
  *

@@ -1,6 +1,6 @@
 <?php
 
-namespace perf\Typing;
+namespace perf\TypeValidation;
 
 /**
  * Static class wrapping a type validator for easy access to type validation.
@@ -70,7 +70,7 @@ class Type
     private static function getValidator()
     {
         if (!self::$validator) {
-            self::setValidator(new TypeValidator());
+            self::setValidator(TypeValidator::createDefault());
         }
 
         return self::$validator;

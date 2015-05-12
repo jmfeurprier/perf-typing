@@ -1,9 +1,9 @@
 <?php
 
-namespace perf\Typing\Parsing;
+namespace perf\TypeValidation\Parsing;
 
-use perf\Typing\InvalidTypeSpecificationException;
-use perf\Typing\Tree;
+use perf\TypeValidation\InvalidTypeSpecificationException;
+use perf\TypeValidation\Tree;
 
 /**
  *

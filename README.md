@@ -1,5 +1,5 @@
-typing
-======
+type validation
+===============
 
 This package allows to check if a variable is of the expected type, using a type specification string like the ones in PHPDoc blocks.
 
@@ -27,7 +27,7 @@ etc.
 ```php
 <?php
 
-use perf\Typing\Type;
+use perf\TypeValidation\Type;
 
 // Valid, will not throw an exception.
 Type::mustBe('string', 'foo');
@@ -41,7 +41,7 @@ Type::mustBe('string', 123);
 ```php
 <?php
 
-use perf\Typing\Type;
+use perf\TypeValidation\Type;
 
 $variable = 'foo';
 
@@ -59,7 +59,7 @@ You can also use a concrete instance of a type validator.
 ```php
 <?php
 
-use perf\Typing\TypeValidator;
+use perf\TypeValidation\TypeValidator;
 
 $validator = new TypeValidator();
 
@@ -79,7 +79,7 @@ if ($validator->isValid('string', $variable)) {
 
 namespace My;
 
-use perf\Typing\Type;
+use perf\TypeValidation\Type;
 
 class PotatoPeeler
 {

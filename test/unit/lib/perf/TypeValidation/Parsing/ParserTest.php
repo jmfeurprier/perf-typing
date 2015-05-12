@@ -1,6 +1,6 @@
 <?php
 
-namespace perf\Typing\Parsing;
+namespace perf\TypeValidation\Parsing;
 
 /**
  *
@@ -44,7 +44,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->parser->parse($typeSpecification);
 
-        $this->assertInstanceOf('\\perf\\Typing\\Tree\\TypeNode', $result);
+        $this->assertInstanceOf('\\perf\\TypeValidation\\Tree\\TypeNode', $result);
         $this->assertSame($typeSpecification, (string) $result);
     }
 
@@ -82,7 +82,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      *
      * @dataProvider dataProviderInvalidTypeSpecification
-     * @expectedException \perf\Typing\InvalidTypeSpecificationException
+     * @expectedException \perf\TypeValidation\InvalidTypeSpecificationException
      */
     public function testParseWithInvalidTypeSpecification($typeSpecification)
     {

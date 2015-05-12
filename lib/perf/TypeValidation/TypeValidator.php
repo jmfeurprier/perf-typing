@@ -1,10 +1,9 @@
 <?php
 
-namespace perf\Typing;
+namespace perf\TypeValidation;
 
 use perf\Caching\CacheClient;
-use perf\Caching\VolatileStorage;
-use perf\Typing\Parsing\Parser;
+use perf\TypeValidation\Parsing\Parser;
 
 /**
  *
@@ -30,22 +29,35 @@ class TypeValidator
     /**
      *
      *
-     * @param Parser $parser
-     * @return void
+     *
+     * @return TypeValidatorBuilder
      */
-    public function setParser(Parser $parser)
+    public static function createDefault()
     {
-        $this->parser = $parser;
+        return static::createBuilder()->build();
     }
 
     /**
      *
      *
+     *
+     * @return TypeValidatorBuilder
+     */
+    public static function createBuilder()
+    {
+        return new TypeValidatorBuilder();
+    }
+
+    /**
+     *
+     *
+     * @param Parser $parser
      * @param CacheClient $cacheClient
      * @return void
      */
-    public function setCacheClient(CacheClient $cacheClient)
+    public function __construct(Parser $parser, CacheClient $cacheClient)
     {
+        $this->parser      = $parser;
         $this->cacheClient = $cacheClient;
     }
 
@@ -81,45 +93,14 @@ class TypeValidator
     {
         $cacheEntryId = __CLASS__ . "|typeSpecification:{$typeSpecification}";
 
-        $typeTree = $this->getCacheClient()->tryFetch($cacheEntryId);
+        $typeTree = $this->cacheClient->tryFetch($cacheEntryId);
 
         if (!$typeTree) {
-            $typeTree = $this->getParser()->parse($typeSpecification);
+            $typeTree = $this->parser->parse($typeSpecification);
 
-            $this->getCacheClient()->store($cacheEntryId, $typeTree);
+            $this->cacheClient->store($cacheEntryId, $typeTree);
         }
 
         return $typeTree;
-    }
-
-    /**
-     *
-     *
-     * @return Parser
-     */
-    private function getParser()
-    {
-        if (!$this->parser) {
-            $this->setParser(new Parser());
-        }
-
-        return $this->parser;
-    }
-
-    /**
-     *
-     *
-     * @return CacheClient
-     */
-    private function getCacheClient()
-    {
-        if (!$this->cacheClient) {
-            $cacheStorage = new VolatileStorage();
-            $cacheClient  = new CacheClient($cacheStorage);
-
-            $this->setCacheClient($cacheClient);
-        }
-
-        return $this->cacheClient;
     }
 }

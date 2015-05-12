@@ -1,8 +1,8 @@
 <?php
 
-namespace perf\Typing\Parsing;
+namespace perf\TypeValidation\Parsing;
 
-use perf\Typing\InvalidTypeSpecificationException;
+use perf\TypeValidation\InvalidTypeSpecificationException;
 
 /**
  *

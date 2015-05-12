@@ -1,6 +1,6 @@
 <?php
 
-namespace perf\Typing\Tree;
+namespace perf\TypeValidation\Tree;
 
 /**
  *

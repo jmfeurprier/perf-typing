@@ -1,23 +1,16 @@
 <?php
 
-namespace perf\Typing\Tree;
+namespace perf\TypeValidation\Tree;
 
 /**
  *
  *
  */
-class MapTypeNode implements TypeNode
+class CollectionTypeNode implements TypeNode
 {
 
     /**
-     * Type node for the key part of an indexed array.
      *
-     * @var TypeNode
-     */
-    private $keyTypeNode;
-
-    /**
-     * Type node for the value part of an indexed array.
      *
      * @var TypeNode
      */
@@ -26,13 +19,11 @@ class MapTypeNode implements TypeNode
     /**
      * Constructor.
      *
-     * @param TypeNode $keyTypeNode Key part type node.
-     * @param TypeNode $valueTypeNode Value part type node.
+     * @param TypeNode $valueTypeNode
      * @return void
      */
-    public function __construct(TypeNode $keyTypeNode, TypeNode $valueTypeNode)
+    public function __construct(TypeNode $valueTypeNode)
     {
-        $this->keyTypeNode   = $keyTypeNode;
         $this->valueTypeNode = $valueTypeNode;
     }
 
@@ -48,11 +39,7 @@ class MapTypeNode implements TypeNode
             return false;
         }
 
-        foreach ($value as $subKey => $subValue) {
-            if (!$this->keyTypeNode->isValid($subKey)) {
-                return false;
-            }
-
+        foreach ($value as $subValue) {
             if (!$this->valueTypeNode->isValid($subValue)) {
                 return false;
             }
@@ -68,6 +55,6 @@ class MapTypeNode implements TypeNode
      */
     public function __toString()
     {
-        return '{' . $this->keyTypeNode . ':' . $this->valueTypeNode . '}';
+        return $this->valueTypeNode . '[]';
     }
 }

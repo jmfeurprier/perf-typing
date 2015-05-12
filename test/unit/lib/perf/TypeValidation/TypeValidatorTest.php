@@ -1,6 +1,6 @@
 <?php
 
-namespace perf\Typing;
+namespace perf\TypeValidation;
 
 /**
  *
@@ -13,7 +13,12 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->typeValidator = new TypeValidator();
+        $parser = new Parsing\Parser();
+
+        $cacheClient = $this->getMockBuilder('\\perf\\Caching\\CacheClient')->disableOriginalConstructor()->getMock();
+        $cacheClient->expects($this->any())->method('tryFetch')->will($this->returnValue(null));
+        
+        $this->typeValidator = new TypeValidator($parser, $cacheClient);
     }
 
     /**
@@ -36,7 +41,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      *
      * @dataProvider dataProviderInvalidTypeSpecifications
-     * @expectedException \perf\Typing\InvalidTypeSpecificationException
+     * @expectedException \perf\TypeValidation\InvalidTypeSpecificationException
      */
     public function testWithInvalidTypeSpecificationWillThrowException($typeSpecification)
     {
