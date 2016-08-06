@@ -88,8 +88,6 @@ class TypeValidatorBuilder
             return $this->cacheClient;
         }
 
-        $cacheStorage = new VolatileStorage();
-
-        return new CacheClient($cacheStorage);
+        return CacheClient::createVolatile();
     }
 }

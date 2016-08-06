@@ -15,7 +15,7 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $parser = new Parsing\Parser();
 
-        $cacheClient = $this->getMockBuilder('\\perf\\Caching\\CacheClient')->disableOriginalConstructor()->getMock();
+        $cacheClient = $this->getMockBuilder('perf\\Caching\\CacheClient')->disableOriginalConstructor()->getMock();
         $cacheClient->expects($this->any())->method('tryFetch')->will($this->returnValue(null));
         
         $this->typeValidator = new TypeValidator($parser, $cacheClient);
@@ -308,7 +308,10 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->typeValidator->isValid($typeSpecification, $value);
 
-        $this->assertTrue($result, "Type specification '{$typeSpecification}' is not satisfied by provided value.");
+        $this->assertTrue(
+            $result,
+            "Type specification '{$typeSpecification}' is not satisfied by provided value."
+        );
     }
 
     /**
@@ -318,6 +321,9 @@ class TypeValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->typeValidator->isValid($typeSpecification, $value);
 
-        $this->assertFalse($result, "Type specification '{$typeSpecification}' should not be satisfied by provided value.");
+        $this->assertFalse(
+            $result,
+            "Type specification '{$typeSpecification}' should not be satisfied by provided value."
+        );
     }
 }

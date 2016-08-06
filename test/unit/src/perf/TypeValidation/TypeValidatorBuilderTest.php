@@ -23,7 +23,7 @@ class TypeValidatorBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->typeValidatorBuilder->build();
 
-        $this->assertInstanceOf('\\perf\\TypeValidation\\TypeValidator', $result);
+        $this->assertInstanceOf('perf\\TypeValidation\\TypeValidator', $result);
     }
 
     /**
@@ -31,13 +31,13 @@ class TypeValidatorBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testBuildWithParser()
     {
-        $parser = $this->getMock('\\perf\\TypeValidation\\Parsing\\Parser');
+        $parser = $this->getMock('perf\\TypeValidation\\Parsing\\Parser');
 
         $this->typeValidatorBuilder->setParser($parser);
 
         $result = $this->typeValidatorBuilder->build();
 
-        $this->assertInstanceOf('\\perf\\TypeValidation\\TypeValidator', $result);
+        $this->assertInstanceOf('perf\\TypeValidation\\TypeValidator', $result);
     }
 
     /**
@@ -45,12 +45,12 @@ class TypeValidatorBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testBuildWithCacheClient()
     {
-        $cacheClient = $this->getMockBuilder('\\perf\Caching\CacheClient')->disableOriginalConstructor()->getMock();
+        $cacheClient = $this->getMockBuilder('perf\\Caching\\CacheClient')->disableOriginalConstructor()->getMock();
 
         $this->typeValidatorBuilder->setCacheClient($cacheClient);
 
         $result = $this->typeValidatorBuilder->build();
 
-        $this->assertInstanceOf('\\perf\\TypeValidation\\TypeValidator', $result);
+        $this->assertInstanceOf('perf\\TypeValidation\\TypeValidator', $result);
     }
 }
