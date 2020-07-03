@@ -2,34 +2,12 @@
 
 namespace perf\TypeValidation\Tree;
 
-/**
- *
- *
- */
 class MapTypeNode implements TypeNode
 {
+    private TypeNode $keyTypeNode;
 
-    /**
-     * Type node for the key part of an indexed array.
-     *
-     * @var TypeNode
-     */
-    private $keyTypeNode;
+    private TypeNode $valueTypeNode;
 
-    /**
-     * Type node for the value part of an indexed array.
-     *
-     * @var TypeNode
-     */
-    private $valueTypeNode;
-
-    /**
-     * Constructor.
-     *
-     * @param TypeNode $keyTypeNode Key part type node.
-     * @param TypeNode $valueTypeNode Value part type node.
-     * @return void
-     */
     public function __construct(TypeNode $keyTypeNode, TypeNode $valueTypeNode)
     {
         $this->keyTypeNode   = $keyTypeNode;
@@ -37,12 +15,9 @@ class MapTypeNode implements TypeNode
     }
 
     /**
-     * Tells wether provided value is valid according to current type node.
-     *
-     * @param mixed $value Value to validate.
-     * @return bool
+     * {@inheritDoc}
      */
-    public function isValid($value)
+    public function isValid($value): bool
     {
         if (!is_array($value)) {
             return false;
@@ -62,9 +37,7 @@ class MapTypeNode implements TypeNode
     }
 
     /**
-     * Returns a textual representation of the current type node.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function __toString()
     {

@@ -2,17 +2,14 @@
 
 namespace perf\TypeValidation\Tree;
 
+use PHPUnit\Framework\TestCase;
+
 /**
- *
  * Functional test.
  */
-class TreeTest extends \PHPUnit_Framework_TestCase
+class TreeTest extends TestCase
 {
-
-    /**
-     *
-     */
-    protected function setUp()
+    protected function setUp(): void
     {
         // "{int:string}[]|null|{string:int|float}|{string:{int:float|string}|stdClass}"
 

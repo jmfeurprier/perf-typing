@@ -2,38 +2,23 @@
 
 namespace perf\TypeValidation\Tree;
 
-/**
- *
- *
- */
 class CollectionTypeNode implements TypeNode
 {
+    private TypeNode $valueTypeNode;
 
-    /**
-     *
-     *
-     * @var TypeNode
-     */
-    private $valueTypeNode;
-
-    /**
-     * Constructor.
-     *
-     * @param TypeNode $valueTypeNode
-     * @return void
-     */
     public function __construct(TypeNode $valueTypeNode)
     {
         $this->valueTypeNode = $valueTypeNode;
     }
 
     /**
-     * Tells wether provided value is valid according to current type node.
+     * Tells whether provided value is valid according to current type node.
      *
      * @param mixed $value Value to validate.
+     *
      * @return bool
      */
-    public function isValid($value)
+    public function isValid($value): bool
     {
         if (!is_array($value)) {
             return false;

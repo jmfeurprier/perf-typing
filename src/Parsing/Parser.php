@@ -2,54 +2,44 @@
 
 namespace perf\TypeValidation\Parsing;
 
-use perf\TypeValidation\InvalidTypeSpecificationException;
+use perf\TypeValidation\Exception\InvalidTypeSpecificationException;
 use perf\TypeValidation\Tree;
+use perf\TypeValidation\Tree\TypeNode;
 
-/**
- *
- *
- */
 class Parser
 {
+    private const VALID_ARRAY_KEY_TYPES = [
+        'mixed',
+        'string',
+        'int',
+        'integer',
+    ];
+
+
+    private Tokenizer $tokenizer;
 
     /**
-     *
-     *
-     * @var Tokenizer
-     */
-    private $tokenizer;
-
-    /**
-     *
-     * Temporary property.
-     *
      * @var Token[]
      */
-    private $tokens = array();
+    private array $tokens = [];
 
-    /**
-     *
-     *
-     * @param Tokenizer $tokenizer
-     * @return void
-     */
-    public function setTokenizer(Tokenizer $tokenizer)
+    public function __construct(Tokenizer $tokenizer)
     {
         $this->tokenizer = $tokenizer;
     }
 
     /**
-     *
-     *
      * @param string $typeSpecification
-     * @return Tree\TypeNode
+     *
+     * @return TypeNode
+     *
      * @throws InvalidTypeSpecificationException
      */
-    public function parse($typeSpecification)
+    public function parse(string $typeSpecification): TypeNode
     {
-        $this->tokens = $this->getTokenizer()->tokenize($typeSpecification);
+        $this->tokens = $this->tokenizer->tokenize($typeSpecification);
 
-        $nodes = array();
+        $nodes = [];
 
         while ($this->hasNextToken()) {
             $token = $this->getNextToken();
@@ -90,12 +80,11 @@ class Parser
     }
 
     /**
-     *
-     *
      * @return Tree\TypeNode
+     *
      * @throws InvalidTypeSpecificationException
      */
-    private function parseIndexedArray()
+    private function parseIndexedArray(): TypeNode
     {
         $this->popNextToken();
 
@@ -109,19 +98,12 @@ class Parser
     }
 
     /**
+     * @return TypeNode
      *
-     *
-     * @return Tree\TypeNode
+     * @throws InvalidTypeSpecificationException
      */
-    private function parseArrayKeyType()
+    private function parseArrayKeyType(): TypeNode
     {
-        static $validArrayKeyTypes = array(
-            'mixed',
-            'string',
-            'int',
-            'integer',
-        );
-
         $token = $this->popNextToken();
 
         if (!$token->isLabel()) {
@@ -132,7 +114,7 @@ class Parser
 
         $type = $token->getContent();
 
-        if (!in_array($type, $validArrayKeyTypes, true)) {
+        if (!in_array($type, self::VALID_ARRAY_KEY_TYPES, true)) {
             throw new InvalidTypeSpecificationException(
                 "Unexpected type '{$type}' for array key at offset {$token->getOffset()}."
             );
@@ -142,16 +124,15 @@ class Parser
     }
 
     /**
-     *
-     *
      * @return void
+     *
      * @throws InvalidTypeSpecificationException
      */
-    private function parseColon()
+    private function parseColon(): void
     {
         if (!$this->hasNextToken()) {
             throw new InvalidTypeSpecificationException(
-                "Premature end of type specification encountered."
+                'Premature end of type specification encountered.'
             );
         }
 
@@ -165,14 +146,13 @@ class Parser
     }
 
     /**
+     * @return TypeNode
      *
-     *
-     * @return Tree\TypeNode
      * @throws InvalidTypeSpecificationException
      */
-    private function parseArrayValueType()
+    private function parseArrayValueType(): TypeNode
     {
-        $nodes = array();
+        $nodes = [];
 
         while ($this->hasNextToken()) {
             $token = $this->getNextToken();
@@ -197,11 +177,13 @@ class Parser
 
             if ($nextToken->isPipe()) {
                 $this->popNextToken();
+
                 continue;
             }
 
             if ($nextToken->isClosingBracket()) {
                 $this->popNextToken();
+
                 break;
             }
 
@@ -214,12 +196,11 @@ class Parser
     }
 
     /**
+     * @return TypeNode
      *
-     *
-     * @return Tree\TypeNode
      * @throws InvalidTypeSpecificationException
      */
-    private function parseLabel()
+    private function parseLabel(): TypeNode
     {
         $token = $this->popNextToken();
 
@@ -231,10 +212,11 @@ class Parser
     /**
      *
      *
-     * @param Tree\TypeNode $node
-     * @return Tree\TypeNode
+     * @param TypeNode $node
+     *
+     * @return TypeNode
      */
-    private function parseSquareBrackets(Tree\TypeNode $node)
+    private function parseSquareBrackets(TypeNode $node): TypeNode
     {
         while ($this->hasNextToken()) {
             if (!$this->getNextToken()->isSquareBrackets()) {
@@ -250,13 +232,13 @@ class Parser
     }
 
     /**
+     * @param TypeNode[] $nodes
      *
+     * @return TypeNode
      *
-     * @param Tree\TypeNode[] $nodes
-     * @return Tree\TypeNode
      * @throws InvalidTypeSpecificationException
      */
-    private function mergeTypeNodes(array $nodes)
+    private function mergeTypeNodes(array $nodes): TypeNode
     {
         if (count($nodes) > 1) {
             return new Tree\MultipleTypeNode($nodes);
@@ -269,52 +251,22 @@ class Parser
         }
 
         throw new InvalidTypeSpecificationException(
-            "Failed to extract tokens from specification type."
+            'Failed to extract tokens from specification type.'
         );
     }
 
-    /**
-     *
-     *
-     * @return Token
-     */
-    private function getNextToken()
+    private function getNextToken(): Token
     {
         return reset($this->tokens);
     }
 
-    /**
-     *
-     *
-     * @return Token
-     */
-    private function popNextToken()
+    private function popNextToken(): Token
     {
         return array_shift($this->tokens);
     }
 
-    /**
-     *
-     *
-     * @return bool
-     */
-    private function hasNextToken()
+    private function hasNextToken(): bool
     {
         return (count($this->tokens) > 0);
-    }
-
-    /**
-     *
-     * Lazy getter.
-     *
-     * @return Tokenizer
-     */
-    private function getTokenizer()
-    {
-        if (!$this->tokenizer) {
-            $this->setTokenizer(new Tokenizer());
-        }
-
-        return $this->tokenizer;
     }
 }

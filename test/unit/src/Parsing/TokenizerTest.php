@@ -2,16 +2,14 @@
 
 namespace perf\TypeValidation\Parsing;
 
-/**
- *
- */
-class TokenizerTest extends \PHPUnit_Framework_TestCase
-{
+use perf\TypeValidation\Exception\InvalidTypeSpecificationException;
+use PHPUnit\Framework\TestCase;
 
-    /**
-     *
-     */
-    protected function setUp()
+class TokenizerTest extends TestCase
+{
+    private Tokenizer $tokenizer;
+
+    protected function setUp(): void
     {
         $this->tokenizer = new Tokenizer();
     }
@@ -25,7 +23,7 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->tokenizer->tokenize($typeSpecification);
 
-        $expected = array(
+        $expected = [
             0  => "{",
             1  => "int",
             4  => ":",
@@ -56,9 +54,9 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
             70 => "|",
             71 => "Baz",
             74 => "}",
-        );
+        ];
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertCount(count($expected), $result);
         $this->assertContainsOnly('\\perf\\TypeValidation\\Parsing\\Token', $result);
 
@@ -73,31 +71,28 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     *
-     */
     public static function dataProviderInvalidTypeSpecification()
     {
-        return array(
-            array(array()),
-            array(array('null')),
-            array(null),
-            array(''),
-            array('*'),
-            array(' string'),
-            array('string '),
-            array('string*'),
-            array('string[]*'),
-        );
+        return [
+#            [[]],
+#            [['null']],
+#            [null],
+            [''],
+            ['*'],
+            [' string'],
+            ['string '],
+            ['string*'],
+            ['string[]*'],
+        ];
     }
 
     /**
-     *
      * @dataProvider dataProviderInvalidTypeSpecification
-     * @expectedException \perf\TypeValidation\InvalidTypeSpecificationException
      */
     public function testTokenizeWithInvalidTypeSpecificationWillThrowException($typeSpecification)
     {
+        $this->expectException(InvalidTypeSpecificationException::class);
+
         $this->tokenizer->tokenize($typeSpecification);
     }
 }

@@ -2,41 +2,30 @@
 
 namespace perf\TypeValidation;
 
+use perf\TypeValidation\Exception\InvalidTypeException;
+
 /**
  * Static class wrapping a type validator for easy access to type validation.
- *
  */
 class Type
 {
+    private static TypeValidator $validator;
 
-    /**
-     *
-     *
-     * @var TypeValidator
-     */
-    private static $validator;
-
-    /**
-     * Sets a type validator.
-     *
-     * @param TypeValidator $validator
-     * @return void
-     */
-    public static function setValidator(TypeValidator $validator)
+    public static function setValidator(TypeValidator $validator): void
     {
         self::$validator = $validator;
     }
 
     /**
-     *
-     *
-     * @param string $typeSpecification
-     * @param mixed $value
+     * @param string      $typeSpecification
+     * @param mixed       $value
      * @param null|string $name
+     *
      * @return void
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidTypeException
      */
-    public static function mustBe($typeSpecification, $value, $name = null)
+    public static function mustBe(string $typeSpecification, $value, ?string $name = null): void
     {
         if (!self::is($typeSpecification, $value)) {
             if (is_string($name)) {
@@ -45,18 +34,11 @@ class Type
                 $message = 'Provided value does not match type specification.';
             }
 
-            throw new \InvalidArgumentException($message);
+            throw new InvalidTypeException($message);
         }
     }
 
-    /**
-     *
-     *
-     * @param string $typeSpecification
-     * @param mixed $value
-     * @return bool
-     */
-    public static function is($typeSpecification, $value)
+    public static function is(string $typeSpecification, $value): bool
     {
         return self::getValidator()->isValid($typeSpecification, $value);
     }
@@ -67,9 +49,9 @@ class Type
      *
      * @return TypeValidator
      */
-    private static function getValidator()
+    private static function getValidator(): TypeValidator
     {
-        if (!self::$validator) {
+        if (empty(self::$validator)) {
             self::setValidator(TypeValidator::createDefault());
         }
 

@@ -2,25 +2,15 @@
 
 namespace perf\TypeValidation\Tree;
 
-/**
- *
- *
- */
 class MultipleTypeNode implements TypeNode
 {
-
     /**
-     *
-     *
      * @var TypeNode[]
      */
-    private $typeNodes = array();
+    private array $typeNodes = [];
 
     /**
-     * Constructor.
-     *
      * @param TypeNode[] $typeNodes
-     * @return void
      */
     public function __construct(array $typeNodes)
     {
@@ -30,23 +20,17 @@ class MultipleTypeNode implements TypeNode
     }
 
     /**
-     *
-     *
      * @param TypeNode $typeNode
-     * @return void
      */
-    private function addTypeNode(TypeNode $typeNode)
+    private function addTypeNode(TypeNode $typeNode): void
     {
         $this->typeNodes[] = $typeNode;
     }
 
     /**
-     * Tells wether provided value is valid according to current type node.
-     *
-     * @param mixed $value Value to validate.
-     * @return bool
+     * {@inheritDoc}
      */
-    public function isValid($value)
+    public function isValid($value): bool
     {
         foreach ($this->typeNodes as $typeNode) {
             if ($typeNode->isValid($value)) {
@@ -58,9 +42,7 @@ class MultipleTypeNode implements TypeNode
     }
 
     /**
-     * Returns a textual representation of the current type node.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function __toString()
     {

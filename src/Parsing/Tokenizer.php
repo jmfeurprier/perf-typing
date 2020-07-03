@@ -2,31 +2,27 @@
 
 namespace perf\TypeValidation\Parsing;
 
-use perf\TypeValidation\InvalidTypeSpecificationException;
+use perf\TypeValidation\Exception\InvalidTypeSpecificationException;
 
-/**
- *
- */
 class Tokenizer
 {
+    private const TYPE_MAP = [
+        '{'  => Token::T_OPENING_BRACKET,
+        ':'  => Token::T_COLON,
+        '}'  => Token::T_CLOSING_BRACKET,
+        '[]' => Token::T_SQUARE_BRACKETS,
+        '|'  => Token::T_PIPE,
+    ];
 
     /**
-     *
-     *
      * @param string $typeSpecification
+     *
      * @return Token[]
+     *
      * @throws InvalidTypeSpecificationException
      */
-    public function tokenize($typeSpecification)
+    public function tokenize(string $typeSpecification): array
     {
-        if (!is_string($typeSpecification)) {
-            $type = gettype($typeSpecification);
-
-            throw new InvalidTypeSpecificationException(
-                "Invalid type specification provided: expected string, got {$type}."
-            );
-        }
-
         $rawTokens = $this->getRawTokens($typeSpecification);
 
         $this->validateRawTokens($typeSpecification, $rawTokens);
@@ -35,17 +31,17 @@ class Tokenizer
     }
 
     /**
-     *
-     *
      * @param string $typeSpecification
+     *
      * @return string[]
+     *
      * @throws InvalidTypeSpecificationException
      */
-    private function getRawTokens($typeSpecification)
+    private function getRawTokens(string $typeSpecification): array
     {
         // @todo Improve regex for classes/internal types.
         $regex   = '#([a-zA-Z0-9_\\\\]+|{|}|:|\\[\\]|\\|)#';
-        $matches = array();
+        $matches = [];
         $flags   = (\PREG_PATTERN_ORDER | \PREG_OFFSET_CAPTURE);
 
         preg_match_all($regex, $typeSpecification, $matches, $flags);
@@ -54,14 +50,14 @@ class Tokenizer
     }
 
     /**
-     *
-     *
-     * @param string $typeSpecification
+     * @param string   $typeSpecification
      * @param string[] $rawTokens
+     *
      * @return void
+     *
      * @throws InvalidTypeSpecificationException
      */
-    private function validateRawTokens($typeSpecification, array $rawTokens)
+    private function validateRawTokens(string $typeSpecification, array $rawTokens): void
     {
         if (count($rawTokens) < 1) {
             throw new InvalidTypeSpecificationException(
@@ -83,15 +79,15 @@ class Tokenizer
     }
 
     /**
-     *
-     *
      * @param string[] $rawTokens
+     *
      * @return Token[]
+     *
      * @throws InvalidTypeSpecificationException
      */
-    private function buildTokens(array $rawTokens)
+    private function buildTokens(array $rawTokens): array
     {
-        $tokens = array();
+        $tokens = [];
 
         foreach ($rawTokens as $rawToken) {
             $tokenString = $rawToken[0];
@@ -100,30 +96,12 @@ class Tokenizer
 
             $tokens[] = new Token($tokenType, $tokenString, $tokenOffset);
         }
-        
+
         return $tokens;
     }
 
-    /**
-     *
-     *
-     * @param string $tokenString
-     * @return string
-     */
-    private function getTokenType($tokenString)
+    private function getTokenType(string $tokenString): string
     {
-        static $typeMap = array(
-            '{'  => Token::T_OPENING_BRACKET,
-            ':'  => Token::T_COLON,
-            '}'  => Token::T_CLOSING_BRACKET,
-            '[]' => Token::T_SQUARE_BRACKETS,
-            '|'  => Token::T_PIPE,
-        );
-
-        if (array_key_exists($tokenString, $typeMap)) {
-            return $typeMap[$tokenString];
-        }
-        
-        return Token::T_LABEL;
+        return self::TYPE_MAP[$tokenString] ?? Token::T_LABEL;
     }
 }
