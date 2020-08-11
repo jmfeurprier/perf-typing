@@ -4,7 +4,6 @@ namespace perf\TypeValidation;
 
 use perf\Caching\CacheClient;
 use perf\Caching\Storage\VolatileCachingStorage;
-use perf\Timing\RealTimeClock;
 use perf\TypeValidation\Parsing\Parser;
 use perf\TypeValidation\Parsing\Tokenizer;
 
@@ -45,8 +44,7 @@ class TypeValidatorBuilder
         }
 
         $storage = new VolatileCachingStorage();
-        $clock   = new RealTimeClock();
 
-        return new CacheClient($storage, $clock);
+        return CacheClient::createBuilder()->setStorage($storage)->build();
     }
 }
