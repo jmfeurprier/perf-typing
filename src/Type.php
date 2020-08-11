@@ -29,12 +29,10 @@ class Type
     {
         if (!self::is($typeSpecification, $value)) {
             if (is_string($name)) {
-                $message = "Provided {$name} does not match type specification.";
-            } else {
-                $message = 'Provided value does not match type specification.';
+                throw new InvalidTypeException("Provided {$name} does not match type specification.");
             }
 
-            throw new InvalidTypeException($message);
+            throw new InvalidTypeException('Provided value does not match type specification.');
         }
     }
 
