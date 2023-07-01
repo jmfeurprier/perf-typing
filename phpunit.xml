@@ -1,25 +1,23 @@
 <?xml version="1.0"?>
 <phpunit
 	backupGlobals="false"
-	backupStaticAttributes="false"
+	backupStaticProperties="false"
+	cacheDirectory=".phpunit.cache"
 	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
 	processIsolation="false"
 	stopOnFailure="false"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd"
 >
-
+	<coverage includeUncoveredFiles="true"/>
+	<source>
+		<include>
+			<directory suffix=".php">./src</directory>
+		</include>
+	</source>
 	<testsuites>
 		<testsuite name="default">
 			<directory>./test/unit/src</directory>
 		</testsuite>
 	</testsuites>
-
-	<filter>
-		<whitelist addUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">./src</directory>
-		</whitelist>
-	</filter>
-
 </phpunit>

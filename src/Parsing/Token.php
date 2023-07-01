@@ -1,32 +1,29 @@
 <?php
 
-namespace perf\TypeValidation\Parsing;
+namespace Jmf\TypeValidation\Parsing;
 
-class Token
+readonly class Token
 {
-    public const T_OPENING_BRACKET = 'OPENING_BRACKET';
-    public const T_COLON           = 'COLON';
-    public const T_CLOSING_BRACKET = 'CLOSING_BRACKET';
-    public const T_SQUARE_BRACKETS = 'SQUARE_BRACKETS';
-    public const T_PIPE            = 'PIPE';
-    public const T_LABEL           = 'LABEL';
+    final public const T_OPENING_BRACKET = 'OPENING_BRACKET';
 
-    private string $type;
+    final public const T_COLON = 'COLON';
 
-    private string $content;
+    final public const T_CLOSING_BRACKET = 'CLOSING_BRACKET';
+
+    final public const T_SQUARE_BRACKETS = 'SQUARE_BRACKETS';
+
+    final public const T_PIPE = 'PIPE';
+
+    final public const T_LABEL = 'LABEL';
 
     /**
-     * Position where the token was extracted from the original type specification string.
-     *
-     * @var int
+     * $offset is the position where the token was extracted from the original type specification string.
      */
-    private int $offset;
-
-    public function __construct(string $type, string $content, int $offset)
-    {
-        $this->type    = $type;
-        $this->content = $content;
-        $this->offset  = $offset;
+    public function __construct(
+        private string $type,
+        private string $content,
+        private int $offset
+    ) {
     }
 
     public function isOpeningBracket(): bool

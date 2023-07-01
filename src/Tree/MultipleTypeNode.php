@@ -1,6 +1,6 @@
 <?php
 
-namespace perf\TypeValidation\Tree;
+namespace Jmf\TypeValidation\Tree;
 
 class MultipleTypeNode implements TypeNode
 {
@@ -12,25 +12,20 @@ class MultipleTypeNode implements TypeNode
     /**
      * @param TypeNode[] $typeNodes
      */
-    public function __construct(array $typeNodes)
-    {
+    public function __construct(
+        array $typeNodes
+    ) {
         foreach ($typeNodes as $typeNode) {
             $this->addTypeNode($typeNode);
         }
     }
 
-    /**
-     * @param TypeNode $typeNode
-     */
     private function addTypeNode(TypeNode $typeNode): void
     {
         $this->typeNodes[] = $typeNode;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isValid($value): bool
+    public function isValid(mixed $value): bool
     {
         foreach ($this->typeNodes as $typeNode) {
             if ($typeNode->isValid($value)) {
@@ -41,11 +36,8 @@ class MultipleTypeNode implements TypeNode
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function __toString()
+    public function __toString(): string
     {
-        return join('|', $this->typeNodes);
+        return implode('|', $this->typeNodes);
     }
 }

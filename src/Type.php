@@ -1,11 +1,12 @@
 <?php
 
-namespace perf\TypeValidation;
+namespace Jmf\TypeValidation;
 
-use perf\TypeValidation\Exception\InvalidTypeException;
+use Jmf\TypeValidation\Exception\InvalidTypeException;
+use perf\Caching\Exception\CachingException;
 
 /**
- * Static class wrapping a type validator for easy access to type validation.
+ * Static class wrapping a type validator for easier access to type validation.
  */
 class Type
 {
@@ -17,16 +18,14 @@ class Type
     }
 
     /**
-     * @param string      $typeSpecification
-     * @param mixed       $value
-     * @param null|string $name
-     *
-     * @return void
-     *
+     * @throws CachingException
      * @throws InvalidTypeException
      */
-    public static function mustBe(string $typeSpecification, $value, ?string $name = null): void
-    {
+    public static function mustBe(
+        string $typeSpecification,
+        mixed $value,
+        ?string $name = null
+    ): void {
         if (!self::is($typeSpecification, $value)) {
             if (is_string($name)) {
                 throw new InvalidTypeException("Provided {$name} does not match type specification.");
@@ -36,16 +35,19 @@ class Type
         }
     }
 
-    public static function is(string $typeSpecification, $value): bool
-    {
+    /**
+     * @throws CachingException
+     */
+    public static function is(
+        string $typeSpecification,
+        mixed $value
+    ): bool {
         return self::getValidator()->isValid($typeSpecification, $value);
     }
 
     /**
      * Returns a type validator instance.
      * Lazy getter.
-     *
-     * @return TypeValidator
      */
     private static function getValidator(): TypeValidator
     {

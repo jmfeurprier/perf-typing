@@ -1,11 +1,11 @@
 <?php
 
-namespace perf\TypeValidation;
+namespace Jmf\TypeValidation;
 
 use perf\Caching\CacheClient;
-use perf\TypeValidation\Exception\InvalidTypeSpecificationException;
-use perf\TypeValidation\Parsing\Parser;
-use perf\TypeValidation\Parsing\Tokenizer;
+use Jmf\TypeValidation\Exception\InvalidTypeSpecificationException;
+use Jmf\TypeValidation\Parsing\Parser;
+use Jmf\TypeValidation\Parsing\Tokenizer;
 use PHPUnit\Framework\TestCase;
 
 class TypeValidatorTest extends TestCase
@@ -22,7 +22,10 @@ class TypeValidatorTest extends TestCase
         $this->typeValidator = new TypeValidator($parser, $cacheClient);
     }
 
-    public static function dataProviderInvalidTypeSpecifications()
+    /**
+     * @return array<mixed[]>
+     */
+    public static function dataProviderInvalidTypeSpecifications(): array
     {
         return [
             ['{array:mixed}'],
@@ -36,14 +39,17 @@ class TypeValidatorTest extends TestCase
     /**
      * @dataProvider dataProviderInvalidTypeSpecifications
      */
-    public function testWithInvalidTypeSpecificationWillThrowException($typeSpecification)
+    public function testWithInvalidTypeSpecificationWillThrowException(string $typeSpecification): void
     {
         $this->expectException(InvalidTypeSpecificationException::class);
 
         $this->typeValidator->isValid($typeSpecification, null);
     }
 
-    public static function dataProviderBaseTypesValidCases()
+    /**
+     * @return array<mixed[]>
+     */
+    public static function dataProviderBaseTypesValidCases(): array
     {
         $booleanTrue  = true;
         $booleanFalse = false;
@@ -104,12 +110,15 @@ class TypeValidatorTest extends TestCase
     /**
      * @dataProvider dataProviderBaseTypesValidCases
      */
-    public function testBaseTypesWithValidValues($typeSpecification, $value)
+    public function testBaseTypesWithValidValues(string $typeSpecification, mixed $value): void
     {
         $this->executeValidTestCase($typeSpecification, $value);
     }
 
-    public static function dataProviderBaseTypesInvalidValues()
+    /**
+     * @return array<mixed[]>
+     */
+    public static function dataProviderBaseTypesInvalidValues(): array
     {
         $int      = 123;
         $float    = 2.34;
@@ -138,12 +147,15 @@ class TypeValidatorTest extends TestCase
     /**
      * @dataProvider dataProviderBaseTypesInvalidValues
      */
-    public function testBaseTypesWithInvalidValues($typeSpecification, $value)
+    public function testBaseTypesWithInvalidValues(string $typeSpecification, mixed $value): void
     {
         $this->executeInvalidTestCase($typeSpecification, $value);
     }
 
-    public static function dataProviderNonIndexedArrayValidCases()
+    /**
+     * @return array<mixed[]>
+     */
+    public static function dataProviderNonIndexedArrayValidCases(): array
     {
         return [
             ['string[]', []],
@@ -165,12 +177,15 @@ class TypeValidatorTest extends TestCase
     /**
      * @dataProvider dataProviderNonIndexedArrayValidCases
      */
-    public function testNonIndexedArrayTypeWithValidValues($typeSpecification, $value)
+    public function testNonIndexedArrayTypeWithValidValues(string $typeSpecification, mixed $value): void
     {
         $this->executeValidTestCase($typeSpecification, $value);
     }
 
-    public static function dataProviderNonIndexedArrayInvalidCases()
+    /**
+     * @return array<mixed[]>
+     */
+    public static function dataProviderNonIndexedArrayInvalidCases(): array
     {
         return [
             ['string[]', 'foo'],
@@ -187,12 +202,15 @@ class TypeValidatorTest extends TestCase
     /**
      * @dataProvider dataProviderNonIndexedArrayInvalidCases
      */
-    public function testNonIndexedArrayTypeWithInvalidValues($typeSpecification, $value)
+    public function testNonIndexedArrayTypeWithInvalidValues(string $typeSpecification, mixed $value): void
     {
         $this->executeInvalidTestCase($typeSpecification, $value);
     }
 
-    public static function dataProviderIndexedArrayValidCases()
+    /**
+     * @return array<mixed[]>
+     */
+    public static function dataProviderIndexedArrayValidCases(): array
     {
         return [
             ['{string:mixed}', []],
@@ -203,12 +221,15 @@ class TypeValidatorTest extends TestCase
     /**
      * @dataProvider dataProviderIndexedArrayValidCases
      */
-    public function testIndexedArrayTypeWithValidValues($typeSpecification, $value)
+    public function testIndexedArrayTypeWithValidValues(string $typeSpecification, mixed $value): void
     {
         $this->executeValidTestCase($typeSpecification, $value);
     }
 
-    public static function dataProviderIndexedArrayInvalidCases()
+    /**
+     * @return array<mixed[]>
+     */
+    public static function dataProviderIndexedArrayInvalidCases(): array
     {
         return [
             ['{mixed:mixed}', 'foo'],
@@ -234,12 +255,15 @@ class TypeValidatorTest extends TestCase
     /**
      * @dataProvider dataProviderIndexedArrayInvalidCases
      */
-    public function testIndexedArrayTypeWithInvalidValues($typeSpecification, $value)
+    public function testIndexedArrayTypeWithInvalidValues(string $typeSpecification, mixed $value): void
     {
         $this->executeInvalidTestCase($typeSpecification, $value);
     }
 
-    public static function dataProviderValidAlternativeTypeSpecifications()
+    /**
+     * @return array<mixed[]>
+     */
+    public static function dataProviderValidAlternativeTypeSpecifications(): array
     {
         return [
             ['mixed|mixed', 123],
@@ -263,14 +287,14 @@ class TypeValidatorTest extends TestCase
     /**
      * @dataProvider dataProviderValidAlternativeTypeSpecifications
      */
-    public function testWithValidAlternativeTypeSpecifications($typeSpecification, $value)
+    public function testWithValidAlternativeTypeSpecifications(string $typeSpecification, mixed $value): void
     {
         $this->typeValidator->isValid($typeSpecification, $value);
 
         $this->assertTrue(true);
     }
 
-    private function executeValidTestCase($typeSpecification, $value)
+    private function executeValidTestCase(string $typeSpecification, mixed $value): void
     {
         $result = $this->typeValidator->isValid($typeSpecification, $value);
 
@@ -280,7 +304,7 @@ class TypeValidatorTest extends TestCase
         );
     }
 
-    private function executeInvalidTestCase($typeSpecification, $value)
+    private function executeInvalidTestCase(string $typeSpecification, mixed $value): void
     {
         $result = $this->typeValidator->isValid($typeSpecification, $value);
 

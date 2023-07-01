@@ -1,9 +1,9 @@
 <?php
 
-namespace perf\TypeValidation\Exception;
+namespace Jmf\TypeValidation\Exception;
 
-use Exception;
+use TypeError;
 
-class InvalidTypeException extends Exception
+class InvalidTypeException extends TypeError
 {
 }

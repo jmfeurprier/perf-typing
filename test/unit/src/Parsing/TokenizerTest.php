@@ -1,8 +1,8 @@
 <?php
 
-namespace perf\TypeValidation\Parsing;
+namespace Jmf\TypeValidation\Parsing;
 
-use perf\TypeValidation\Exception\InvalidTypeSpecificationException;
+use Jmf\TypeValidation\Exception\InvalidTypeSpecificationException;
 use PHPUnit\Framework\TestCase;
 
 class TokenizerTest extends TestCase
@@ -14,10 +14,7 @@ class TokenizerTest extends TestCase
         $this->tokenizer = new Tokenizer();
     }
 
-    /**
-     *
-     */
-    public function testTokenizeWithValidTypeSpecification()
+    public function testTokenizeWithValidTypeSpecification(): void
     {
         $typeSpecification = "{int:string}[]|null|{string:int|\\Foo\\Bar}|{string:{int:Foo\\Bar|string}|Baz}";
 
@@ -58,7 +55,7 @@ class TokenizerTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(count($expected), $result);
-        $this->assertContainsOnly('\\perf\\TypeValidation\\Parsing\\Token', $result);
+        $this->assertContainsOnly(Token::class, $result);
 
         $index = 0;
         foreach ($expected as $expectedOffset => $expectedContent) {
@@ -71,7 +68,10 @@ class TokenizerTest extends TestCase
         }
     }
 
-    public static function dataProviderInvalidTypeSpecification()
+    /**
+     * @return array<mixed[]>
+     */
+    public static function dataProviderInvalidTypeSpecification(): array
     {
         return [
 #            [[]],
@@ -89,7 +89,7 @@ class TokenizerTest extends TestCase
     /**
      * @dataProvider dataProviderInvalidTypeSpecification
      */
-    public function testTokenizeWithInvalidTypeSpecificationWillThrowException($typeSpecification)
+    public function testTokenizeWithInvalidTypeSpecificationWillThrowException(string $typeSpecification): void
     {
         $this->expectException(InvalidTypeSpecificationException::class);
 

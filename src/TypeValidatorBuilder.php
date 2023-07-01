@@ -1,11 +1,11 @@
 <?php
 
-namespace perf\TypeValidation;
+namespace Jmf\TypeValidation;
 
 use perf\Caching\CacheClient;
 use perf\Caching\Storage\VolatileCachingStorage;
-use perf\TypeValidation\Parsing\Parser;
-use perf\TypeValidation\Parsing\Tokenizer;
+use Jmf\TypeValidation\Parsing\Parser;
+use Jmf\TypeValidation\Parsing\Tokenizer;
 
 class TypeValidatorBuilder
 {
@@ -43,8 +43,6 @@ class TypeValidatorBuilder
             return $this->cacheClient;
         }
 
-        $storage = new VolatileCachingStorage();
-
-        return CacheClient::createBuilder()->setStorage($storage)->build();
+        return CacheClient::createWithStorage(new VolatileCachingStorage());
     }
 }

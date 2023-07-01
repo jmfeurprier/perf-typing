@@ -1,22 +1,13 @@
 <?php
 
-namespace perf\TypeValidation\Tree;
+namespace Jmf\TypeValidation\Tree;
 
-interface TypeNode
+use Stringable;
+
+interface TypeNode extends Stringable
 {
     /**
      * Tells whether provided value is valid according to current type node.
-     *
-     * @param mixed $value Value to validate.
-     *
-     * @return bool
      */
-    public function isValid($value): bool;
-
-    /**
-     * Returns a textual representation of the current type node.
-     *
-     * @return string
-     */
-    public function __toString();
+    public function isValid(mixed $value): bool;
 }

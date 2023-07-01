@@ -1,10 +1,14 @@
 <?php
 
-namespace perf\TypeValidation\Parsing;
+namespace Jmf\TypeValidation\Parsing;
 
-use perf\TypeValidation\Exception\InvalidTypeSpecificationException;
-use perf\TypeValidation\Tree;
-use perf\TypeValidation\Tree\TypeNode;
+use Jmf\TypeValidation\Exception\InvalidTypeSpecificationException;
+use Jmf\TypeValidation\Tree\CollectionTypeNode;
+use Jmf\TypeValidation\Tree\LeafTypeNode;
+use Jmf\TypeValidation\Tree\MapTypeNode;
+use Jmf\TypeValidation\Tree\MultipleTypeNode;
+use Jmf\TypeValidation\Tree\TypeNode;
+use RuntimeException;
 
 class Parser
 {
@@ -15,24 +19,17 @@ class Parser
         'integer',
     ];
 
-
-    private Tokenizer $tokenizer;
-
     /**
      * @var Token[]
      */
     private array $tokens = [];
 
-    public function __construct(Tokenizer $tokenizer)
-    {
-        $this->tokenizer = $tokenizer;
+    public function __construct(
+        private readonly Tokenizer $tokenizer
+    ) {
     }
 
     /**
-     * @param string $typeSpecification
-     *
-     * @return TypeNode
-     *
      * @throws InvalidTypeSpecificationException
      */
     public function parse(string $typeSpecification): TypeNode
@@ -54,7 +51,7 @@ class Parser
                 );
             }
 
-            if (!$this->hasNextToken()) {
+            if (!$this->hasNextToken()) { // @phpstan-ignore-line
                 break;
             }
 
@@ -69,7 +66,7 @@ class Parser
             $this->popNextToken();
 
             // Trailing pipe (|) encountered?
-            if (!$this->hasNextToken()) {
+            if (!$this->hasNextToken()) { // @phpstan-ignore-line
                 throw new InvalidTypeSpecificationException(
                     "Premature end of type specification encountered."
                 );
@@ -80,8 +77,6 @@ class Parser
     }
 
     /**
-     * @return Tree\TypeNode
-     *
      * @throws InvalidTypeSpecificationException
      */
     private function parseIndexedArray(): TypeNode
@@ -92,14 +87,12 @@ class Parser
         $this->parseColon();
         $valueTypeNode = $this->parseArrayValueType();
 
-        $node = new Tree\MapTypeNode($keyTypeNode, $valueTypeNode);
+        $node = new MapTypeNode($keyTypeNode, $valueTypeNode);
 
         return $this->parseSquareBrackets($node);
     }
 
     /**
-     * @return TypeNode
-     *
      * @throws InvalidTypeSpecificationException
      */
     private function parseArrayKeyType(): TypeNode
@@ -120,12 +113,10 @@ class Parser
             );
         }
 
-        return new Tree\LeafTypeNode($type);
+        return new LeafTypeNode($type);
     }
 
     /**
-     * @return void
-     *
      * @throws InvalidTypeSpecificationException
      */
     private function parseColon(): void
@@ -146,8 +137,6 @@ class Parser
     }
 
     /**
-     * @return TypeNode
-     *
      * @throws InvalidTypeSpecificationException
      */
     private function parseArrayValueType(): TypeNode
@@ -167,7 +156,7 @@ class Parser
                 );
             }
 
-            if (!$this->hasNextToken()) {
+            if (!$this->hasNextToken()) { // @phpstan-ignore-line
                 throw new InvalidTypeSpecificationException(
                     "Premature end of type specification encountered."
                 );
@@ -196,26 +185,17 @@ class Parser
     }
 
     /**
-     * @return TypeNode
-     *
      * @throws InvalidTypeSpecificationException
      */
     private function parseLabel(): TypeNode
     {
         $token = $this->popNextToken();
 
-        $node = new Tree\LeafTypeNode($token->getContent());
+        $node = new LeafTypeNode($token->getContent());
 
         return $this->parseSquareBrackets($node);
     }
 
-    /**
-     *
-     *
-     * @param TypeNode $node
-     *
-     * @return TypeNode
-     */
     private function parseSquareBrackets(TypeNode $node): TypeNode
     {
         while ($this->hasNextToken()) {
@@ -225,7 +205,7 @@ class Parser
 
             $this->popNextToken();
 
-            $node = new Tree\CollectionTypeNode($node);
+            $node = new CollectionTypeNode($node);
         }
 
         return $node;
@@ -234,20 +214,16 @@ class Parser
     /**
      * @param TypeNode[] $nodes
      *
-     * @return TypeNode
-     *
      * @throws InvalidTypeSpecificationException
      */
     private function mergeTypeNodes(array $nodes): TypeNode
     {
         if (count($nodes) > 1) {
-            return new Tree\MultipleTypeNode($nodes);
+            return new MultipleTypeNode($nodes);
         }
 
         if (1 === count($nodes)) {
-            $node = reset($nodes);
-
-            return $node;
+            return reset($nodes);
         }
 
         throw new InvalidTypeSpecificationException(
@@ -257,16 +233,24 @@ class Parser
 
     private function getNextToken(): Token
     {
+        if (empty($this->tokens)) {
+            throw new RuntimeException();
+        }
+
         return reset($this->tokens);
     }
 
     private function popNextToken(): Token
     {
+        if (empty($this->tokens)) {
+            throw new RuntimeException();
+        }
+
         return array_shift($this->tokens);
     }
 
     private function hasNextToken(): bool
     {
-        return (count($this->tokens) > 0);
+        return !empty($this->tokens);
     }
 }

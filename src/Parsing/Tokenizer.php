@@ -1,10 +1,10 @@
 <?php
 
-namespace perf\TypeValidation\Parsing;
+namespace Jmf\TypeValidation\Parsing;
 
-use perf\TypeValidation\Exception\InvalidTypeSpecificationException;
+use Jmf\TypeValidation\Exception\InvalidTypeSpecificationException;
 
-class Tokenizer
+readonly class Tokenizer
 {
     private const TYPE_MAP = [
         '{'  => Token::T_OPENING_BRACKET,
@@ -15,8 +15,6 @@ class Tokenizer
     ];
 
     /**
-     * @param string $typeSpecification
-     *
      * @return Token[]
      *
      * @throws InvalidTypeSpecificationException
@@ -31,9 +29,7 @@ class Tokenizer
     }
 
     /**
-     * @param string $typeSpecification
-     *
-     * @return string[]
+     * @return array<array{0: string, 1: int}>
      *
      * @throws InvalidTypeSpecificationException
      */
@@ -50,15 +46,14 @@ class Tokenizer
     }
 
     /**
-     * @param string   $typeSpecification
-     * @param string[] $rawTokens
-     *
-     * @return void
+     * @param array<array{0: string, 1: int}> $rawTokens
      *
      * @throws InvalidTypeSpecificationException
      */
-    private function validateRawTokens(string $typeSpecification, array $rawTokens): void
-    {
+    private function validateRawTokens(
+        string $typeSpecification,
+        array $rawTokens
+    ): void {
         if (count($rawTokens) < 1) {
             throw new InvalidTypeSpecificationException(
                 'Invalid type specification provided: no type specification found.'
@@ -79,7 +74,7 @@ class Tokenizer
     }
 
     /**
-     * @param string[] $rawTokens
+     * @param array<array{0: string, 1: int}> $rawTokens
      *
      * @return Token[]
      *

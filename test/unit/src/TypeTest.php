@@ -1,20 +1,20 @@
 <?php
 
-namespace perf\TypeValidation;
+namespace Jmf\TypeValidation;
 
-use perf\TypeValidation\Exception\InvalidTypeException;
+use Jmf\TypeValidation\Exception\InvalidTypeException;
 use PHPUnit\Framework\TestCase;
 
 class TypeTest extends TestCase
 {
-    public function testWithValidValue()
+    public function testWithValidValue(): void
     {
         Type::mustBe('string', 'string');
 
         $this->assertTrue(true);
     }
 
-    public function testWithInvalidValueWillThrowException()
+    public function testWithInvalidValueWillThrowException(): void
     {
         $this->expectException(InvalidTypeException::class);
         $this->expectExceptionMessage('Provided value does not match type specification.');
@@ -22,7 +22,7 @@ class TypeTest extends TestCase
         Type::mustBe('integer', 'string');
     }
 
-    public function testWithInvalidValueAndNamedValueWillThrowException()
+    public function testWithInvalidValueAndNamedValueWillThrowException(): void
     {
         $this->expectException(InvalidTypeException::class);
         $this->expectExceptionMessage('Provided foo does not match type specification.');

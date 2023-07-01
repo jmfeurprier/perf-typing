@@ -1,24 +1,15 @@
 <?php
 
-namespace perf\TypeValidation\Tree;
+namespace Jmf\TypeValidation\Tree;
 
-class CollectionTypeNode implements TypeNode
+readonly class CollectionTypeNode implements TypeNode
 {
-    private TypeNode $valueTypeNode;
-
-    public function __construct(TypeNode $valueTypeNode)
-    {
-        $this->valueTypeNode = $valueTypeNode;
+    public function __construct(
+        private TypeNode $valueTypeNode
+    ) {
     }
 
-    /**
-     * Tells whether provided value is valid according to current type node.
-     *
-     * @param mixed $value Value to validate.
-     *
-     * @return bool
-     */
-    public function isValid($value): bool
+    public function isValid(mixed $value): bool
     {
         if (!is_array($value)) {
             return false;
@@ -33,12 +24,7 @@ class CollectionTypeNode implements TypeNode
         return true;
     }
 
-    /**
-     * Returns a textual representation of the current type node.
-     *
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->valueTypeNode . '[]';
     }

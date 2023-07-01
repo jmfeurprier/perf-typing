@@ -25,7 +25,12 @@
 	<target name="phpunit" description="Runs unit tests with PHPUnit">
 		<exec executable="${bindir}phpunit" passthru="true">
 			<arg line="-c ${rootdir}phpunit.xml" />
-			<arg line="--verbose" />
+			<arg line="--display-deprecations" />
+			<arg line="--display-errors" />
+			<arg line="--display-incomplete" />
+			<arg line="--display-notices" />
+			<arg line="--display-skipped" />
+			<arg line="--display-warnings" />
 		</exec>
 	</target>
 

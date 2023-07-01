@@ -1,8 +1,8 @@
 <?php
 
-namespace perf\TypeValidation\Tree;
+namespace Jmf\TypeValidation\Tree;
 
-class LeafTypeNode implements TypeNode
+readonly class LeafTypeNode implements TypeNode
 {
     private const FUNCTION_MAP = [
         'array'    => 'is_array',
@@ -20,17 +20,12 @@ class LeafTypeNode implements TypeNode
         'string'   => 'is_string',
     ];
 
-    private string $type;
-
-    public function __construct(string $type)
-    {
-        $this->type = $type;
+    public function __construct(
+        private string $type
+    ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isValid($value): bool
+    public function isValid(mixed $value): bool
     {
         if ('mixed' === $this->type) {
             return true;
@@ -49,10 +44,7 @@ class LeafTypeNode implements TypeNode
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->type;
     }

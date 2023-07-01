@@ -3,18 +3,18 @@
 require(__DIR__ . '/../../vendor/autoload.php');
 
 $typeSpecification = "{int:string}[]|null|{string:int|float}|{string:{int:float|string}|stdClass}";
-$iterations        = 1000;
-$variable          = array(
-    'foo' => new \stdClass(),
-    'bar' => array(
+$iterations        = 100000;
+$variable          = [
+    'foo' => new stdClass(),
+    'bar' => [
         123 => -2.34,
-    ),
-);
+    ],
+];
 
 $timestampStart = microtime(true);
 
 for ($i = 0; $i < $iterations; ++$i) {
-    \perf\TypeValidation\Type::mustBe($typeSpecification, $variable);
+    Jmf\TypeValidation\Type::mustBe($typeSpecification, $variable);
 }
 
 $timestampEnd = microtime(true);

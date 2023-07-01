@@ -1,6 +1,6 @@
 <?php
 
-namespace perf\TypeValidation\Tree;
+namespace Jmf\TypeValidation\Tree;
 
 use PHPUnit\Framework\TestCase;
 
@@ -9,12 +9,14 @@ use PHPUnit\Framework\TestCase;
  */
 class TreeTest extends TestCase
 {
+    private TypeNode $tree;
+
     protected function setUp(): void
     {
         // "{int:string}[]|null|{string:int|float}|{string:{int:float|string}|stdClass}"
 
         $this->tree = new MultipleTypeNode(
-            array(
+            [
                 new CollectionTypeNode(
                     new MapTypeNode(
                         new LeafTypeNode('int'),
@@ -25,81 +27,79 @@ class TreeTest extends TestCase
                 new MapTypeNode(
                     new LeafTypeNode('string'),
                     new MultipleTypeNode(
-                        array(
+                        [
                             new LeafTypeNode('int'),
                             new LeafTypeNode('float'),
-                        )
+                        ]
                     )
                 ),
                 new MapTypeNode(
                     new LeafTypeNode('string'),
                     new MultipleTypeNode(
-                        array(
+                        [
                             new MapTypeNode(
                                 new LeafTypeNode('int'),
                                 new MultipleTypeNode(
-                                    array(
+                                    [
                                         new LeafTypeNode('float'),
                                         new LeafTypeNode('string'),
-                                    )
+                                    ]
                                 )
                             ),
                             new LeafTypeNode('stdClass'),
-                        )
+                        ]
                     )
                 ),
-            )
+            ]
         );
     }
 
     /**
-     *
+     * @return array<mixed[]>
      */
-    public static function dataProviderValidValues()
+    public static function dataProviderValidValues(): array
     {
         // "{int:string}[]|null|{string:int|float}|{string:{int:float|string}|stdClass}"
 
-        return array(
-            array(array()),
-            array(array(array("123" => 'foo'))),
-            array(null),
-            array(array('foo' => 123)),
-            array(array('foo' => 1.23)),
-            array(array('foo' => array(123 => 1.23))),
-            array(array('foo' => array(123 => 'bar'))),
-            array(array('foo' => new \stdClass())),
-        );
+        return [
+            [[]],
+            [[["123" => 'foo']]],
+            [null],
+            [['foo' => 123]],
+            [['foo' => 1.23]],
+            [['foo' => [123 => 1.23]]],
+            [['foo' => [123 => 'bar']]],
+            [['foo' => new \stdClass()]],
+        ];
     }
 
     /**
-     *
      * @dataProvider dataProviderValidValues
      */
-    public function testWithValidValues($value)
+    public function testWithValidValues(mixed $value): void
     {
         $this->assertTrue($this->tree->isValid($value));
     }
 
     /**
-     *
+     * @return array<mixed[]>
      */
-    public static function dataProviderInvalidValues()
+    public static function dataProviderInvalidValues(): array
     {
         // "{int:string}[]|null|{string:int|float}|{string:{int:float|string}|stdClass}"
 
-        return array(
-            array(123),
-            array(1.23),
-            array(array(123 => 234)),
-            array(array('foo' => null)),
-        );
+        return [
+            [123],
+            [1.23],
+            [[123 => 234]],
+            [['foo' => null]],
+        ];
     }
 
     /**
-     *
      * @dataProvider dataProviderInvalidValues
      */
-    public function testWithInvalidValues($value)
+    public function testWithInvalidValues(mixed $value): void
     {
         $this->assertFalse($this->tree->isValid($value));
     }

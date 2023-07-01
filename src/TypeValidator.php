@@ -1,18 +1,15 @@
 <?php
 
-namespace perf\TypeValidation;
+namespace Jmf\TypeValidation;
 
+use Jmf\TypeValidation\Exception\InvalidTypeSpecificationException;
+use Jmf\TypeValidation\Parsing\Parser;
+use Jmf\TypeValidation\Tree\TypeNode;
 use perf\Caching\CacheClient;
-use perf\TypeValidation\Exception\InvalidTypeSpecificationException;
-use perf\TypeValidation\Parsing\Parser;
-use perf\TypeValidation\Tree\TypeNode;
+use perf\Caching\Exception\CachingException;
 
-class TypeValidator
+readonly class TypeValidator
 {
-    private Parser $parser;
-
-    private CacheClient $cacheClient;
-
     public static function createDefault(): self
     {
         return static::createBuilder()->build();
@@ -23,30 +20,25 @@ class TypeValidator
         return new TypeValidatorBuilder();
     }
 
-    public function __construct(Parser $parser, CacheClient $cacheClient)
-    {
-        $this->parser      = $parser;
-        $this->cacheClient = $cacheClient;
+    public function __construct(
+        private Parser $parser,
+        private CacheClient $cacheClient
+    ) {
     }
 
     /**
-     * @param string $typeSpecification
-     * @param mixed  $value
-     *
-     * @return bool
-     *
+     * @throws CachingException
      * @throws InvalidTypeSpecificationException
      */
-    public function isValid(string $typeSpecification, $value): bool
-    {
+    public function isValid(
+        string $typeSpecification,
+        mixed $value
+    ): bool {
         return $this->getTypeTree($typeSpecification)->isValid($value);
     }
 
     /**
-     * @param string $typeSpecification
-     *
-     * @return TypeNode
-     *
+     * @throws CachingException
      * @throws InvalidTypeSpecificationException
      */
     private function getTypeTree(string $typeSpecification): TypeNode
@@ -55,7 +47,7 @@ class TypeValidator
 
         $typeTree = $this->cacheClient->tryFetch($cacheEntryId);
 
-        if (!$typeTree) {
+        if (!$typeTree instanceof TypeNode) {
             $typeTree = $this->parser->parse($typeSpecification);
 
             $this->cacheClient->store($cacheEntryId, $typeTree);
@@ -66,6 +58,6 @@ class TypeValidator
 
     private function getCacheEntryId(string $typeSpecification): string
     {
-        return __CLASS__ . "|typeSpecification:{$typeSpecification}";
+        return self::class . "|typeSpecification:{$typeSpecification}";
     }
 }

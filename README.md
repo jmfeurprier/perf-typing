@@ -27,7 +27,7 @@ etc.
 ```php
 <?php
 
-use perf\TypeValidation\Type;
+use Jmf\TypeValidation\Type;
 
 // Valid, will not throw an exception.
 Type::mustBe('string', 'foo');
@@ -41,7 +41,7 @@ Type::mustBe('string', 123);
 ```php
 <?php
 
-use perf\TypeValidation\Type;
+use Jmf\TypeValidation\Type;
 
 $variable = 'foo';
 
@@ -59,7 +59,7 @@ You can also use a concrete instance of a type validator.
 ```php
 <?php
 
-use perf\TypeValidation\TypeValidator;
+use Jmf\TypeValidation\TypeValidator;
 
 $validator = new TypeValidator();
 
@@ -77,20 +77,18 @@ if ($validator->isValid('string', $variable)) {
 ```php
 <?php
 
-namespace My;
+namespace App;
 
-use perf\TypeValidation\Type;
+use Jmf\TypeValidation\Type;
 
 class PotatoPeeler
 {
-
     /**
      * @param Potato[] $potatoes
-     * @return void
      */
-    public function peel(array $potatoes)
+    public function peel(array $potatoes): void
     {
-        Type::mustBe('\My\Potato[]', $potatoes);
+        Type::mustBe('\App\Potato[]', $potatoes);
 
         // ...
     }

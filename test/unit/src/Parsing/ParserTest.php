@@ -1,9 +1,9 @@
 <?php
 
-namespace perf\TypeValidation\Parsing;
+namespace Jmf\TypeValidation\Parsing;
 
-use perf\TypeValidation\Exception\InvalidTypeSpecificationException;
-use perf\TypeValidation\Tree\TypeNode;
+use Jmf\TypeValidation\Exception\InvalidTypeSpecificationException;
+use Jmf\TypeValidation\Tree\TypeNode;
 use PHPUnit\Framework\TestCase;
 
 class ParserTest extends TestCase
@@ -15,7 +15,10 @@ class ParserTest extends TestCase
         $this->parser = new Parser(new Tokenizer());
     }
 
-    public static function dataProviderValidTypeSpecification()
+    /**
+     * @return array<mixed[]>
+     */
+    public static function dataProviderValidTypeSpecification(): array
     {
         return [
             ['foo'],
@@ -35,7 +38,7 @@ class ParserTest extends TestCase
     /**
      * @dataProvider dataProviderValidTypeSpecification
      */
-    public function testParseWithValidTypeSpecification($typeSpecification)
+    public function testParseWithValidTypeSpecification(string $typeSpecification): void
     {
         $result = $this->parser->parse($typeSpecification);
 
@@ -43,7 +46,10 @@ class ParserTest extends TestCase
         $this->assertSame($typeSpecification, (string) $result);
     }
 
-    public static function dataProviderInvalidTypeSpecification()
+    /**
+     * @return array<mixed[]>
+     */
+    public static function dataProviderInvalidTypeSpecification(): array
     {
         return [
 #            [[]],
@@ -74,7 +80,7 @@ class ParserTest extends TestCase
     /**
      * @dataProvider dataProviderInvalidTypeSpecification
      */
-    public function testParseWithInvalidTypeSpecification($typeSpecification)
+    public function testParseWithInvalidTypeSpecification(string $typeSpecification): void
     {
         $this->expectException(InvalidTypeSpecificationException::class);
         $this->parser->parse($typeSpecification);

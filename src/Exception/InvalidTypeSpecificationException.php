@@ -1,6 +1,6 @@
 <?php
 
-namespace perf\TypeValidation\Exception;
+namespace Jmf\TypeValidation\Exception;
 
 use InvalidArgumentException;
 

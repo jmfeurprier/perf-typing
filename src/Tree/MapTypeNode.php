@@ -1,23 +1,16 @@
 <?php
 
-namespace perf\TypeValidation\Tree;
+namespace Jmf\TypeValidation\Tree;
 
-class MapTypeNode implements TypeNode
+readonly class MapTypeNode implements TypeNode
 {
-    private TypeNode $keyTypeNode;
-
-    private TypeNode $valueTypeNode;
-
-    public function __construct(TypeNode $keyTypeNode, TypeNode $valueTypeNode)
-    {
-        $this->keyTypeNode   = $keyTypeNode;
-        $this->valueTypeNode = $valueTypeNode;
+    public function __construct(
+        private TypeNode $keyTypeNode,
+        private TypeNode $valueTypeNode
+    ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isValid($value): bool
+    public function isValid(mixed $value): bool
     {
         if (!is_array($value)) {
             return false;
@@ -36,10 +29,7 @@ class MapTypeNode implements TypeNode
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return '{' . $this->keyTypeNode . ':' . $this->valueTypeNode . '}';
     }

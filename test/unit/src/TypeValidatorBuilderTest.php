@@ -1,9 +1,9 @@
 <?php
 
-namespace perf\TypeValidation;
+namespace Jmf\TypeValidation;
 
 use perf\Caching\CacheClient;
-use perf\TypeValidation\Parsing\Parser;
+use Jmf\TypeValidation\Parsing\Parser;
 use PHPUnit\Framework\TestCase;
 
 class TypeValidatorBuilderTest extends TestCase
@@ -15,14 +15,14 @@ class TypeValidatorBuilderTest extends TestCase
         $this->typeValidatorBuilder = new TypeValidatorBuilder();
     }
 
-    public function testBuildBare()
+    public function testBuildBare(): void
     {
         $result = $this->typeValidatorBuilder->build();
 
         $this->assertInstanceOf(TypeValidator::class, $result);
     }
 
-    public function testBuildWithParser()
+    public function testBuildWithParser(): void
     {
         $parser = $this->createMock(Parser::class);
 
@@ -33,7 +33,7 @@ class TypeValidatorBuilderTest extends TestCase
         $this->assertInstanceOf(TypeValidator::class, $result);
     }
 
-    public function testBuildWithCacheClient()
+    public function testBuildWithCacheClient(): void
     {
         $cacheClient = $this->createMock(CacheClient::class);
 
